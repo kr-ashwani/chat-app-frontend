@@ -1,0 +1,39 @@
+.chatSection > .displayChat {
+  width: 0;
+  flex-grow: 2;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.roomName {
+  background-color: #202c33;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.memeberListIcon {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 10px;
+  height: 40px;
+  visibility: hidden;
+}
+.viewChat {
+  height: 0;
+  flex-grow: 1;
+  background-color: #0b141a;
+}
+
+@media only screen and (max-width: 700px) {
+  .roomName {
+    height: 45px;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .memeberListIcon {
+    visibility: visible;
+  }
+}

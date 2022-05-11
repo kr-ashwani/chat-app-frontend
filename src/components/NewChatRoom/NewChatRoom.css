@@ -1,0 +1,105 @@
+.newChatRoom,
+.groupChat {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 10px;
+  background-color: #2f3134;
+  transform: translateY(100%);
+  transition: transform 400ms cubic-bezier(0.09, 0.04, 0.56, 1.05);
+}
+.newChatRoom.show,
+.groupChat.show {
+  transform: translateY(10%);
+}
+.newChatRoom .cancel,
+.groupChat .cancel,
+.newChatRoom .next {
+  cursor: pointer;
+  color: #1d90f5;
+  font-weight: 500;
+}
+
+.newChatRoomDetail,
+.groupChatDetail {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  padding: 10px;
+}
+.newChatRoomDetail > .heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.newChatRoomDetail > .heading > * {
+  flex: 1 1 0;
+}
+.newChatRoom .next {
+  text-align: right;
+}
+.newChatRoomDetail input {
+  padding: 4px 30px;
+  background-color: #595757;
+  color: #fff;
+  border: 0;
+}
+.newChatRoomDetail input:focus {
+  box-shadow: 0 0;
+}
+.newChatRoomDetail .userSearch {
+  position: relative;
+}
+.newChatRoomDetail .userSearch > i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 8px;
+  display: flex;
+  align-items: center;
+  color: #a7a9ac;
+  font-size: 0.9rem;
+}
+.newChatRoomDetail .userList {
+  overflow: auto;
+}
+
+.userList {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #373f44;
+}
+
+.userList::-webkit-scrollbar {
+  width: 5px;
+}
+
+.userList::-webkit-scrollbar-thumb {
+  background-color: #373f44;
+  border-radius: 10px;
+
+  /* outline: 1px solid slategrey; */
+}
+
+.userList > div {
+  margin-bottom: 8px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+.userList {
+  padding-top: 10px;
+}
+.userList > div > i {
+  margin-left: auto;
+  margin-right: 5px;
+  text-align: right;
+  cursor: pointer;
+  color: rgb(213, 211, 211);
+}
+.userList > div > i:hover {
+  filter: brightness(85%);
+}

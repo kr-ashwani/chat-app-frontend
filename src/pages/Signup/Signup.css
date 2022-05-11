@@ -1,0 +1,93 @@
+form h2 {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 900;
+  margin: 10px 0 5px;
+}
+.mainContent {
+  display: flex;
+}
+.mainContent > .signupForm,
+.mainContent > .loginForm {
+  max-width: 440px;
+  flex-grow: 1;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  width: 100%;
+  padding: 30px 10px;
+  /* box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.1); */
+  /* border-radius: 10px; */
+}
+.signupForm > form {
+  gap: 0;
+  padding: 20px 10px;
+}
+.signupForm .field label {
+  margin: 15px 0 10px;
+}
+.combinedInput {
+  display: flex;
+  gap: 10px;
+}
+input {
+  -webkit-appearance: none;
+  padding: 9px 12px;
+  border-radius: 5px;
+  background-color: #fffffff5;
+  border: 1px solid rgba(221, 221, 221, 0.955);
+  font-size: 0.98rem;
+  width: 100%;
+}
+input:focus {
+  box-shadow: 0 0 1px 2px rgba(53, 248, 248, 0.719);
+  -webkit-box-shadow: 0 0 1px 2px rgba(53, 248, 248, 0.719);
+  outline: 0;
+}
+label {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 500;
+  margin: 0 0 15px;
+}
+button {
+  margin-top: 10px;
+  cursor: pointer;
+  align-self: center;
+  color: rgb(40, 38, 38);
+  border-radius: 36px;
+  background: #fdda50d7;
+  background: #ffd014f0;
+  border: 0;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 0.8em;
+  padding: 10px 35px;
+  letter-spacing: 2px;
+}
+.signupForm button {
+  margin-top: 30px;
+}
+.btn:hover {
+  filter: brightness(85%);
+}
+button:hover {
+  filter: brightness(85%);
+}
+.error {
+  color: #ff0099;
+  margin: 10px 0 0;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+.responseError.error {
+  margin: 20px 0 0;
+}
+.success {
+  color: #17da3ef1;
+  margin: 10px 0 0;
+  font-size: 0.8em;
+  font-weight: bold;
+}

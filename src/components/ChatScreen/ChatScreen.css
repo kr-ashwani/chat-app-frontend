@@ -1,0 +1,25 @@
+.viewChat {
+  padding: 20px 20px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  overflow-y: scroll;
+  color: #e8ebec;
+  scrollbar-width: thin;
+  scrollbar-color: #373f44;
+}
+
+.viewChat::-webkit-scrollbar {
+  width: 4px;
+}
+
+.viewChat::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.viewChat::-webkit-scrollbar-thumb {
+  background-color: #373f44;
+  border-radius: 10px;
+
+  /* outline: 1px solid slategrey; */
+}

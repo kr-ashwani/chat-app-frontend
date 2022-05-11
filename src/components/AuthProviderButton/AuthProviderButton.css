@@ -1,0 +1,54 @@
+.authIconBox > * {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+  overflow: hidden;
+  font-size: 1.8rem;
+}
+.authIconBox {
+  margin: 25px auto 20px;
+}
+.authIconBox > *:hover {
+  filter: brightness(85%);
+}
+.authIconBox > *:nth-child(1) {
+  background-color: #fff;
+}
+.authIconBox > *:nth-child(1) > img {
+  width: 2rem;
+}
+.authIconBox > *:nth-child(2) {
+  background-color: #4267b2;
+}
+.authIconBox > *:nth-child(3) {
+  font-size: 3.2rem;
+  background-color: #171515;
+}
+.authIconBox {
+  display: flex;
+  gap: 35px;
+}
+
+.optionLine {
+  position: relative;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  margin: 10px;
+  color: #a8a9ae;
+  /* background-color: #a8a9ae; */
+}
+.optionLine::before,
+.optionLine::after {
+  display: inline-block;
+  content: "";
+  height: 1.3px;
+  margin: 0 10px 4px;
+  background-color: #a8a9ae;
+  width: calc(50% - 40px);
+}

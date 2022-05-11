@@ -1,0 +1,30 @@
+.chatRoomBox {
+  /* background-color: #323644; */
+  cursor: pointer;
+  border-radius: 5px;
+  display: flex;
+  gap: 10px;
+  height: 72px;
+}
+.chatRoomBox:hover {
+  background-color: #202c33;
+}
+.addChatRoom {
+  color: #1d90f5;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+}
+.chatRoomDetail {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-bottom: 1px solid #afb7bc26;
+}
+.chatRoomImg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

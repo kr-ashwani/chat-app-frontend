@@ -1,0 +1,15 @@
+.chatGroup {
+  position: relative;
+  padding-top: 8px;
+  background-color: rgba(29, 27, 27, 0.844);
+}
+.chatRooms {
+  display: flex;
+  padding: 0 10px;
+  flex-direction: column;
+  gap: 8px;
+}
+.chatRoomList {
+  margin-top: 10px;
+  border-top: 1px solid #afb7bc26;
+}
