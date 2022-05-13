@@ -10,6 +10,8 @@ const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
 
   useEffect(() => {
     console.log('selectedChat : ', selectedChat);
+    if (selectedChat)
+      document.getElementsByClassName('welcomeScreen')[0].classList.add('hide');
   }, [selectedChat]);
 
   useEffect(() => {
@@ -22,13 +24,14 @@ const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
     function newMessage({ newMsg, lastMsg }) {
       setChatRoomMessages((prev) => {
         const prevMsg = prev[newMsg.chatRoomID];
-        if (lastMsg)
-          for (let i = prevMsg.length - 1; i >= 0; i++) {
+        if (lastMsg && prevMsg)
+          for (let i = prevMsg.length - 1; i >= 0; i--) {
             if (prevMsg[i].createdAt === lastMsg.createdAt) {
               prevMsg[i].showUserInfo = lastMsg.showUserInfo;
               break;
             }
           }
+        if (!prevMsg) return { ...prev, [newMsg.chatRoomID]: [newMsg] };
         return { ...prev, [newMsg.chatRoomID]: [...prevMsg, newMsg] };
       });
     }

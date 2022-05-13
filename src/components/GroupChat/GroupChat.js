@@ -15,6 +15,12 @@ const GroupChat = () => {
             }}>
             Cancel
           </div>
+          <h2>Members</h2>
+          <div className="next">Next</div>
+        </div>
+        <div className="userSearch">
+          <i className="fa-solid fa-magnifying-glass"></i>
+          <input type="text" placeholder="Search" />
         </div>
       </div>
     </div>

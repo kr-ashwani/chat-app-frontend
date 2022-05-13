@@ -4,7 +4,7 @@ import './Header.css';
 import { useAuth } from '../../context/AuthContext';
 
 const Header = () => {
-  const { currentUser, setUser } = useAuth();
+  const { currentUser } = useAuth();
   useEffect(() => {
     console.log('Current user ', currentUser);
   });
@@ -22,45 +22,39 @@ const Header = () => {
     return () => window.removeEventListener('resize', setVh);
   }, []);
 
-  async function logOut(e) {
-    e.preventDefault();
-    await fetch(`${process.env.REACT_APP_SERVER_ENDPOINT}/logout`, {
-      credentials: 'include',
-    });
-    setUser({
-      currentUser: null,
-      accessToken: null,
-    });
-  }
+  // async function logOut(e) {
+  //   e.preventDefault();
+  //   await fetch(`${process.env.REACT_APP_SERVER_ENDPOINT}/logout`, {
+  //     credentials: 'include',
+  //   });
+  //   setUser({
+  //     currentUser: null,
+  //     accessToken: null,
+  //   });
+  // }
 
-  return (
+  return !currentUser ? (
     <nav>
       <div className="navbar">
         <h1>
           <Link to="/">Chatx</Link>
+          &nbsp; &nbsp;
+          {currentUser?.firstName}
         </h1>
         <ul>
-          {!currentUser ? (
-            <>
-              <li>
-                <Link to="/login">Log in</Link>
-              </li>
-              <li>
-                <Link to="/signup" className="btn">
-                  Sign up
-                </Link>
-              </li>
-            </>
-          ) : (
-            <li>
-              <Link to="/signup" onClick={logOut} className="btn">
-                Log out
-              </Link>
-            </li>
-          )}
+          <li>
+            <Link to="/login">Log in</Link>
+          </li>
+          <li>
+            <Link to="/signup" className="btn">
+              Sign up
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>
+  ) : (
+    <></>
   );
 };
 export default Header;

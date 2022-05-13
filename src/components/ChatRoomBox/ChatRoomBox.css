@@ -5,9 +5,14 @@
   display: flex;
   gap: 10px;
   height: 72px;
+  transition: background-color 60ms ease-in-out;
+}
+.chatRoomBox.selected {
+  background-color: #303135;
 }
 .chatRoomBox:hover {
   background-color: #202c33;
+  background-color: #303135b3;
 }
 .addChatRoom {
   color: #1d90f5;
@@ -27,4 +32,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.chatRoomMsg {
+}
+.chatRoomMsg > span {
+  display: block;
+  width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

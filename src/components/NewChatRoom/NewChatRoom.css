@@ -1,6 +1,7 @@
 .newChatRoom,
 .groupChat {
   position: absolute;
+  z-index: 100;
   top: 0;
   left: 0;
   right: 0;
@@ -8,15 +9,19 @@
   border-radius: 10px;
   background-color: #2f3134;
   transform: translateY(100%);
-  transition: transform 400ms cubic-bezier(0.09, 0.04, 0.56, 1.05);
+  /* transition: transform 500ms cubic-bezier(0.09, 0.04, 0.56, 1.05); */
+  transition: transform 500ms cubic-bezier(0.1, 0.82, 0.25, 1);
+  padding: 10px;
+  padding-top: 40px;
 }
 .newChatRoom.show,
 .groupChat.show {
-  transform: translateY(10%);
+  transform: translateY(3%);
 }
 .newChatRoom .cancel,
 .groupChat .cancel,
-.newChatRoom .next {
+.newChatRoom .next,
+.groupChat .next {
   cursor: pointer;
   color: #1d90f5;
   font-weight: 500;
@@ -28,32 +33,39 @@
   display: flex;
   flex-direction: column;
   gap: 13px;
-  padding: 10px;
 }
-.newChatRoomDetail > .heading {
+.newChatRoomDetail > .heading,
+.groupChatDetail > .heading {
+  padding-bottom: 5px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-.newChatRoomDetail > .heading > * {
+.newChatRoomDetail > .heading > *,
+.groupChatDetail > .heading > * {
   flex: 1 1 0;
 }
-.newChatRoom .next {
+.newChatRoom .next,
+.groupChatDetail .next {
   text-align: right;
 }
-.newChatRoomDetail input {
+.newChatRoomDetail input,
+.groupChatDetail input {
   padding: 4px 30px;
   background-color: #595757;
   color: #fff;
   border: 0;
 }
-.newChatRoomDetail input:focus {
+.newChatRoomDetail input:focus,
+.groupChatDetail input:focus {
   box-shadow: 0 0;
 }
-.newChatRoomDetail .userSearch {
+.newChatRoomDetail .userSearch,
+.groupChatDetail .userSearch {
   position: relative;
 }
-.newChatRoomDetail .userSearch > i {
+.newChatRoomDetail .userSearch > i,
+.groupChatDetail .userSearch > i {
   position: absolute;
   top: 0;
   bottom: 0;

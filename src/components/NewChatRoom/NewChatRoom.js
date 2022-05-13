@@ -54,7 +54,7 @@ const NewChatRoom = ({ chatRooms }) => {
             }}>
             Cancel
           </div>
-          <h3>Message</h3>
+          <h2>Message</h2>
           <div className="next">Next</div>
         </div>
         <div className="userSearch">
@@ -63,12 +63,10 @@ const NewChatRoom = ({ chatRooms }) => {
         </div>
         <div className="userList">
           {userList.map((elm, id) => (
-            <div key={id}>
+            <div key={id} onClick={() => newMessage(elm)}>
               {<UserAvatar imgSrc={elm.photoUrl} size="40px" />}
-              {elm.firstName + ' ' + elm.lastName}
-              <i
-                className="fa-solid fa-message"
-                onClick={() => newMessage(elm)}></i>
+              <p>{elm.firstName + ' ' + elm.lastName}</p>
+              <i className="fa-solid fa-message"></i>
             </div>
           ))}
         </div>

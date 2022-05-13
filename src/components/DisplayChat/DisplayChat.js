@@ -8,6 +8,7 @@ import UserAvatar from '../UserAvatar/UserAvatar';
 import { useSocket } from '../../context/SocketContext';
 import useChatRoom from '../../hooks/useChatRoom';
 import { useAuth } from '../../context/AuthContext';
+import chattingImg from '../../assets/chatting.svg';
 
 const DisplayChat = () => {
   const { selectedChat } = useSelectedChat();
@@ -20,14 +21,15 @@ const DisplayChat = () => {
   useEffect(() => {
     async function getChatList(payload) {
       if (payload.error) return console.log(payload.error);
-      const roomIdMap = payload.response.reduce(
-        (accum, elem) => ({ ...accum, [elem._id]: elem }),
-        {}
-      );
+      const roomIdMap = payload.response.reduce((accum, elem) => {
+        socket.emit('message:list', elem._id);
+        return { ...accum, [elem._id]: elem };
+      }, {});
       const roomMsgMap = payload.response.reduce(
         (accum, elem) => ({ ...accum, [elem._id]: [] }),
         {}
       );
+
       setChatRooms(roomIdMap);
       setChatRoomMessages(roomMsgMap);
     }
@@ -38,30 +40,47 @@ const DisplayChat = () => {
   }, [currentUser, socket, setChatRooms]);
 
   useEffect(() => {
-    if (!selectedChat) return;
-
     function getChatRoomMessages(payload) {
       if (payload.error) return console.log(payload.error);
 
       setChatRoomMessages((prev) => ({
         ...prev,
-        [selectedChat.chatRoomID]: payload.response,
+        [payload.chatRoomID]: payload.chatRoomMsgs,
       }));
     }
-
-    if (!chatRoomMessages[selectedChat.chatRoomID]) return;
-    if (!chatRoomMessages[selectedChat.chatRoomID].length) {
-      console.log('hello');
-      socket.emit('message:list', selectedChat.chatRoomID);
-      socket.on('message:list', getChatRoomMessages);
-    }
-
+    socket.on('message:list', getChatRoomMessages);
     return () => socket.off('message:list', getChatRoomMessages);
-  }, [socket, selectedChat, chatRoomMessages]);
+  }, [socket]);
+
+  useEffect(() => {
+    if (selectedChat) {
+      document.getElementsByClassName('displayChat')[0].classList.add('show');
+      document.getElementsByClassName('chatGroup')[0].classList.add('shift');
+    }
+  }, [selectedChat]);
 
   return (
     <div className="displayChat">
+      <div className="welcomeScreen">
+        <div className="logo">
+          <img src={chattingImg} alt="chatx logo" />
+          <h2>Chatx</h2>
+          <p>Realtime chat app for web</p>
+        </div>
+      </div>
+
       <div className="roomName">
+        <i
+          className="fa-solid fa-arrow-left"
+          onClick={() => {
+            document
+              .getElementsByClassName('displayChat')[0]
+              .classList.remove('show');
+
+            document
+              .getElementsByClassName('chatGroup')[0]
+              .classList.remove('shift');
+          }}></i>
         <UserAvatar imgSrc={selectedChat?.photoUrl} size="25px" />
         <h3 style={{ marginLeft: '10px' }}>
           {selectedChat

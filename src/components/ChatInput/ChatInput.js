@@ -59,9 +59,10 @@ const ChatInput = ({ setChatRoomMessages }) => {
 
   // placeholder appear disappear logic
   useEffect(() => {
-    if (message) {
+    // alert(message.trim().length);
+    if (message.trim().length)
       document.getElementsByClassName('inputTitle')[0].style.display = 'none';
-    } else
+    else
       document.getElementsByClassName('inputTitle')[0].style.display = 'block';
   }, [message]);
 
@@ -148,7 +149,6 @@ const ChatInput = ({ setChatRoomMessages }) => {
             break;
           }
         }
-        console.log(previousTextMessage);
         if (previousTextMessage) {
           const currentMessageTime = messageData.createdAt;
           const previousMessageTime = previousTextMessage.createdAt;

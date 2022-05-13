@@ -6,7 +6,12 @@ import './ChatRoomBox.css';
 const ChatRoomBox = ({ chatRoomDetail }) => {
   const { setSelectedChat } = useSelectedChat();
 
-  async function openChatRoomMessages(chatRoomInfo) {
+  async function openChatRoomMessages(e, chatRoomInfo) {
+    Array.from(
+      document.getElementsByClassName('chatRoomList')[0].children
+    ).forEach((elem) => elem.classList.remove('selected'));
+    e.currentTarget.classList.add('selected');
+
     const { _id: chatRoomID, ...selected } = chatRoomInfo;
     setSelectedChat({ ...selected, chatRoomID });
   }
@@ -14,7 +19,7 @@ const ChatRoomBox = ({ chatRoomDetail }) => {
   return (
     <div
       className="chatRoomBox"
-      onClick={() => openChatRoomMessages(chatRoomDetail)}>
+      onClick={(e) => openChatRoomMessages(e, chatRoomDetail)}>
       <div className="chatRoomImg">
         <UserAvatar imgSrc={chatRoomDetail.photoUrl} size="50px" />
       </div>
@@ -23,7 +28,7 @@ const ChatRoomBox = ({ chatRoomDetail }) => {
           <h4>{chatRoomDetail.firstName + ' ' + chatRoomDetail.lastName}</h4>
         </div>
         <div className="chatRoomMsg">
-          <h5>{chatRoomDetail.lastMessage}</h5>
+          <span>{chatRoomDetail.lastMessage}</span>
         </div>
       </div>
     </div>

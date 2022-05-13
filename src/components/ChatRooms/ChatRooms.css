@@ -5,11 +5,63 @@
 }
 .chatRooms {
   display: flex;
-  padding: 0 10px;
+  padding: 0 10px 3px;
   flex-direction: column;
   gap: 8px;
 }
 .chatRoomList {
   margin-top: 10px;
   border-top: 1px solid #afb7bc26;
+}
+
+.chatRooms > .chatHeader {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px 0 10px;
+  position: relative;
+}
+.chatHeader > .userDropDown {
+  position: absolute;
+  top: 55px;
+  right: 5px;
+  background-color: #233138;
+  color: #d1d7d8;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px 0 rgba(var(--shadow-rgb), 0.26),
+    0 2px 10px 0 rgba(var(--shadow-rgb), 0.16);
+  padding: 10px 0;
+  transform-origin: right top;
+  transform: scale(0);
+  opacity: 0.5;
+  transition: transform 250ms ease-in-out, opacity 250ms ease-in-out;
+}
+.userDropDown.show {
+  opacity: 1;
+  transform: scale(1);
+}
+.userDropDown li {
+  cursor: pointer;
+  display: flex;
+  width: 180px;
+  height: 40px;
+  align-items: center;
+  padding-left: 20px;
+}
+.userDropDown li:hover {
+  background-color: #182229;
+}
+:root {
+  --shadow-rgb: 11, 20, 26;
+}
+.chatHeader > h2 {
+  flex-grow: 1;
+}
+.chatHeader > h2::first-letter {
+  text-transform: capitalize;
+}
+
+.chatRooms > .chatHeader svg {
+  cursor: pointer;
+  margin-top: 3px;
 }
