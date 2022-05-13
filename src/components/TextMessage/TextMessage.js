@@ -19,7 +19,7 @@ const TextMessage = ({ message }) => {
           messageOfUserItself ? (
             <>
               <div className="msgTimestamp">
-                {dateFormat(new Date(message.lastUpdatedAt), 'h:MM TT')}
+                {dateFormat(new Date(message.updatedAt), 'h:MM TT')}
               </div>
               <div className="msgSenderName">You</div>
               <UserAvatar imgSrc={`${message.senderPhotoUrl}`} size="20px" />
@@ -29,7 +29,7 @@ const TextMessage = ({ message }) => {
               <UserAvatar imgSrc={`${message.senderPhotoUrl}`} size="20px" />
               <div className="msgSenderName">{message.senderName}</div>
               <div className="msgTimestamp">
-                {dateFormat(new Date(message.lastUpdatedAt), 'h:MM TT')}
+                {dateFormat(new Date(message.updatedAt), 'h:MM TT')}
               </div>
             </>
           )

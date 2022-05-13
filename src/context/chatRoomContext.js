@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 const ChatRoomContext = React.createContext();
 
 function ChatRoomProvider({ children }) {
-  const [chatRooms, setChatRooms] = useState([]);
+  const [chatRooms, setChatRooms] = useState({});
 
   const value = {
     chatRooms,

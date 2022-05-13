@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
-import TextMessage from '../TextMessage/TextMessage';
 import './ChatScreen.css';
 import useSelectedChat from '../../hooks/useSelectedChat';
+import { useSocket } from '../../context/SocketContext';
+import TextMessage from '../TextMessage/TextMessage';
 
-const ChatScreen = ({ chatRoomMessages }) => {
+const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
   const { selectedChat } = useSelectedChat();
+  const { socket } = useSocket();
 
   useEffect(() => {
     console.log('selectedChat : ', selectedChat);
@@ -14,6 +16,27 @@ const ChatScreen = ({ chatRoomMessages }) => {
     const viewChat = document.getElementsByClassName('viewChat')[0];
     viewChat.scrollTop = viewChat.scrollHeight;
   }, [selectedChat, chatRoomMessages]);
+
+  // socket realtime new message
+  useEffect(() => {
+    function newMessage({ newMsg, lastMsg }) {
+      setChatRoomMessages((prev) => {
+        const prevMsg = prev[newMsg.chatRoomID];
+        if (lastMsg)
+          for (let i = prevMsg.length - 1; i >= 0; i++) {
+            if (prevMsg[i].createdAt === lastMsg.createdAt) {
+              prevMsg[i].showUserInfo = lastMsg.showUserInfo;
+              break;
+            }
+          }
+        return { ...prev, [newMsg.chatRoomID]: [...prevMsg, newMsg] };
+      });
+    }
+
+    socket.on('DB:message:create', newMessage);
+
+    return () => socket.off('DB:message:create', newMessage);
+  }, [socket, setChatRoomMessages]);
 
   return (
     <>

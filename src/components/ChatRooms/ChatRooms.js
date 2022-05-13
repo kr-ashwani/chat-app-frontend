@@ -2,28 +2,23 @@ import React, { useEffect } from 'react';
 import GroupChat from '../GroupChat/GroupChat';
 import NewChatRoom from '../NewChatRoom/NewChatRoom';
 import './ChatRooms.css';
-import { useAuth } from '../../context/AuthContext';
 import ChatRoomBox from '../ChatRoomBox/ChatRoomBox';
-import { useSocket } from '../../context/SocketContext';
 import useChatRoom from '../../hooks/useChatRoom';
+import { useSocket } from '../../context/SocketContext';
 
 const ChatGroup = () => {
-  const { currentUser } = useAuth();
-
   const { chatRooms, setChatRooms } = useChatRoom();
 
   const { socket } = useSocket();
 
-  useEffect(() => {
-    async function getChatList(payload) {
-      if (payload.error) return console.log(payload.error);
-      setChatRooms(payload.response);
-    }
-    socket.emit('chatRoom:list', currentUser._id);
-    socket.on('chatRoom:list', getChatList);
+  // useEffect(() => {
+  //   function createChatRoom({ newChat }) {
+  //     setChatRooms((prev) => ({ ...prev, [newChat._id]: newChat }));
+  //   }
 
-    return () => socket.off('chatRoom:list', getChatList);
-  }, [currentUser, socket, setChatRooms]);
+  //   socket.on('DB:chatRoom:create', createChatRoom);
+  //   return () => socket.off('DB:chatRoom:create');
+  // }, [socket, setChatRooms]);
 
   return (
     <div className={`chatGroup`}>
@@ -53,7 +48,7 @@ const ChatGroup = () => {
         </div>
       </div>
       <div className="chatRoomList">
-        {chatRooms.map((elem, id) => {
+        {Object.values(chatRooms).map((elem, id) => {
           return <ChatRoomBox key={id} chatRoomDetail={elem} />;
         })}
       </div>

@@ -82,6 +82,7 @@ emoji-picker {
   height: 100%;
   filter: brightness(70%);
   user-select: none;
+  pointer-events: none;
 }
 .inputMessage::-webkit-scrollbar {
   width: 4px;

@@ -4,6 +4,7 @@ import { useSocket } from '../../context/SocketContext';
 import useChatRoom from '../../hooks/useChatRoom';
 import useSelectedChat from '../../hooks/useSelectedChat';
 import './ChatInput.css';
+import { v4 as uuid } from 'uuid';
 
 const ChatInput = ({ setChatRoomMessages }) => {
   const { currentUser } = useAuth();
@@ -13,7 +14,7 @@ const ChatInput = ({ setChatRoomMessages }) => {
   const messageDiv = useRef();
   // const [chatRoomTypingMessage, setChatRoomTypingMessage] = useState([]);
 
-  const { selectedChat } = useSelectedChat();
+  const { selectedChat, setSelectedChat } = useSelectedChat();
   const { socket } = useSocket();
   const { chatRooms, setChatRooms } = useChatRoom();
 
@@ -78,6 +79,8 @@ const ChatInput = ({ setChatRoomMessages }) => {
 
   // paste logic
   function pasteInput(e) {
+    console.log(e);
+    e.preventDefault();
     const paste = (e.clipboardData || window.clipboardData).getData('text');
     e.target.innerText += paste;
     e.target.scrollTop = e.target.scrollHeight;
@@ -86,7 +89,6 @@ const ChatInput = ({ setChatRoomMessages }) => {
     //? Set cursor at end of text for content editable div , text area and input field
     window.getSelection().selectAllChildren(messageDiv.current);
     window.getSelection().collapseToEnd();
-    e.preventDefault();
   }
 
   //message is sent to server and local message and chatRoom State is changed
@@ -99,20 +101,89 @@ const ChatInput = ({ setChatRoomMessages }) => {
     }
     console.log('message sent : ', message);
 
+    const chatRoomUpdatedID = uuid();
+    const createdAt = new Date().getTime();
+
     const messageData = {
       senderID: currentUser._id,
       senderPhotoUrl: currentUser.photoUrl,
-      senderName: currentUser.firstname + ' ' + currentUser.lastname,
+      senderName: currentUser.firstName + ' ' + currentUser.lastName,
       message: message.trim(),
       messageType: 'text',
-      chatRoomID: selectedChat?.chatRoomID,
+      chatRoomID: selectedChat.chatRoomID,
+      chatRoomUpdatedID,
+      createdAt,
+      receiverID: selectedChat.selectedUserID,
+      updatedAt: createdAt,
+      showUserInfo: true,
     };
-    // socket.emit('message:create', messageData);
-    console.log(chatRooms);
+    if (selectedChat.chatRoomID) socket.emit('message:create', { messageData });
+    else socket.emit('message:create', { messageData, selectedChat });
 
+    if (selectedChat.chatRoomID) {
+      setChatRooms((prev) => {
+        const chatRoom = prev[selectedChat.chatRoomID];
+        return {
+          ...prev,
+          [selectedChat.chatRoomID]: {
+            ...chatRoom,
+            lastMessage: message.trim(),
+            lastMessageType: 'text',
+            lastMessageTimestamp: createdAt,
+            chatRoomUpdatedID,
+          },
+        };
+      });
+
+      //show userInfo logic
+      setChatRoomMessages((prev) => {
+        const messageListClone = prev[selectedChat.chatRoomID];
+        let previousTextMessage = null;
+
+        for (let i = messageListClone.length - 1; i >= 0; i--) {
+          if (messageListClone[i].messageType === 'information') continue;
+          if (currentUser._id !== messageListClone[i].senderID) break;
+          if (messageListClone[i].message) {
+            previousTextMessage = messageListClone[i];
+            break;
+          }
+        }
+        console.log(previousTextMessage);
+        if (previousTextMessage) {
+          const currentMessageTime = messageData.createdAt;
+          const previousMessageTime = previousTextMessage.createdAt;
+          if ((currentMessageTime - previousMessageTime) / (1000 * 60) < 1)
+            previousTextMessage.showUserInfo = false;
+        }
+        return {
+          ...prev,
+          [selectedChat.chatRoomID]: [...messageListClone, messageData],
+        };
+      });
+    }
+
+    console.log(chatRooms);
     setMessage('');
     messageDiv.current.innerText = '';
   }
+
+  useEffect(() => {
+    async function getNewChatRoom(payload) {
+      if (payload.error) return console.log(payload.error);
+      const { newChatRoom, newMsg, selectedChatRoom } = payload;
+      const { _id: chatRoomID } = newChatRoom;
+      console.log('PAYLOAD: ', payload);
+      setChatRooms((prev) => ({ ...prev, [chatRoomID]: newChatRoom }));
+      setChatRoomMessages((prev) => ({
+        ...prev,
+        [chatRoomID]: [newMsg],
+      }));
+      setSelectedChat({ ...selectedChatRoom, chatRoomID });
+    }
+    socket.on('message:create', getNewChatRoom);
+
+    return () => socket.off('message:create', getNewChatRoom);
+  }, [socket, setChatRooms, setChatRoomMessages, setSelectedChat]);
 
   return (
     <div className="chatInput">
@@ -138,7 +209,7 @@ const ChatInput = ({ setChatRoomMessages }) => {
           contentEditable="true"
           title="Type a message"
           onInput={(e) => setMessage(e.target.innerText)}
-          onPaste={pasteInput}></div>
+          onPaste={(e) => pasteInput(e)}></div>
       </div>
       <div className="sendBtn">
         <i className="fa-solid fa-paper-plane" onClick={sendMessage}></i>

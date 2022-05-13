@@ -24,7 +24,7 @@ const NewChatRoom = ({ chatRooms }) => {
   }, [currentUser, socket]);
 
   async function newMessage(userInfo) {
-    const chatRoom = chatRooms.filter((elem) =>
+    const chatRoom = Object.values(chatRooms).filter((elem) =>
       elem.participants.length === 2
         ? elem.participants.includes(userInfo._id)
           ? true

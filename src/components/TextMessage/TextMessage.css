@@ -4,6 +4,10 @@
   flex-direction: column;
   gap: 10px;
   align-self: flex-start;
+  align-items: flex-start;
+}
+.msgText.msgText.userMessage {
+  align-self: flex-end;
 }
 
 .msgText {
