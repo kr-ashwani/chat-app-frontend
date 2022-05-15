@@ -1,5 +1,5 @@
 .messageBox {
-  max-width: 80%;
+  max-width: 85%;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -12,12 +12,13 @@
 
 .msgText {
   font-size: 0.9rem;
-  padding: 10px 15px;
+  padding: 10px 10px;
   /* background-color: #1d90f5; */
   background-color: #424656;
   border-radius: 20px 20px 20px 6px / 20px 20px 20px 6px;
   word-wrap: break-word;
   white-space: pre-wrap;
+  position: relative;
 }
 
 .msgSenderInfo {
@@ -49,6 +50,17 @@
   color: #79797c;
   font-size: 0.85rem;
   margin: 15px 0;
+}
+
+.msgStatus {
+  position: absolute;
+  bottom: 1px;
+  right: 8px;
+  transform: scale(0.98);
+}
+.som {
+  display: inline-block;
+  width: 20px;
 }
 
 @media only screen and (max-width: 700px) {

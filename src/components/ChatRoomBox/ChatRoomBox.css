@@ -5,6 +5,9 @@
   display: flex;
   gap: 10px;
   height: 72px;
+  position: absolute;
+  width: 100%;
+  background-color: #1d1b1b;
   transition: background-color 60ms ease-in-out;
 }
 .chatRoomBox.selected {
@@ -35,6 +38,9 @@
 }
 
 .chatRoomMsg {
+  padding-top: 2px;
+  font-size: 0.9rem;
+  color: #8696a0;
 }
 .chatRoomMsg > span {
   display: block;
@@ -42,4 +48,16 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.chatRoomName {
+  display: flex;
+  padding-right: 15px;
+  font-size: 0.9rem;
+}
+.chatRoomName > span {
+  color: #8696a0;
+}
+.chatRoomName > h4 {
+  flex-grow: 1;
 }

@@ -132,6 +132,7 @@ const ChatInput = ({ setChatRoomMessages }) => {
             lastMessageType: 'text',
             lastMessageTimestamp: createdAt,
             chatRoomUpdatedID,
+            updatedAt: createdAt,
           },
         };
       });

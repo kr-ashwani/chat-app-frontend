@@ -1,7 +1,7 @@
 .chatInput {
   width: 100%;
   min-height: 60px;
-  padding: 0 15px 0 10px;
+  padding: 0 0 0 10px;
   background-color: #202c33;
   display: flex;
   gap: 10px;
@@ -61,10 +61,11 @@ emoji-picker {
   overflow-y: auto;
 }
 .sendBtn {
-  width: 24px;
+  width: 40px;
 }
 .sendBtn > i {
   font-size: 1.5rem;
+  padding: 20px 10px 20px 0;
   cursor: pointer;
 }
 

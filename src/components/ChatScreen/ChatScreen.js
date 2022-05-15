@@ -16,8 +16,16 @@ const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
 
   useEffect(() => {
     const viewChat = document.getElementsByClassName('viewChat')[0];
+    viewChat.style.scrollBehavior = 'smooth';
     viewChat.scrollTop = viewChat.scrollHeight;
-  }, [selectedChat, chatRoomMessages]);
+    viewChat.style.scrollBehavior = 'auto';
+  }, [chatRoomMessages]);
+
+  useEffect(() => {
+    const viewChat = document.getElementsByClassName('viewChat')[0];
+    viewChat.style.scrollBehavior = 'auto';
+    viewChat.scrollTop = viewChat.scrollHeight;
+  }, [selectedChat]);
 
   // socket realtime new message
   useEffect(() => {

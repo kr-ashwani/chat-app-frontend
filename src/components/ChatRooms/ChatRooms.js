@@ -2,11 +2,11 @@ import React, { useEffect, useRef } from 'react';
 import GroupChat from '../GroupChat/GroupChat';
 import NewChatRoom from '../NewChatRoom/NewChatRoom';
 import './ChatRooms.css';
-import ChatRoomBox from '../ChatRoomBox/ChatRoomBox';
 import useChatRoom from '../../hooks/useChatRoom';
 import { useSocket } from '../../context/SocketContext';
 import UserAvatar from '../UserAvatar/UserAvatar';
 import { useAuth } from '../../context/AuthContext';
+import ChatRoomsList from '../ChatRoomsList/ChatRoomsList';
 
 const ChatGroup = () => {
   const { chatRooms, setChatRooms } = useChatRoom();
@@ -72,9 +72,9 @@ const ChatGroup = () => {
 
   return (
     <div className={`chatGroup`}>
+      <NewChatRoom chatRooms={chatRooms} />
+      <GroupChat />
       <div className="chatRooms">
-        <NewChatRoom chatRooms={chatRooms} />
-        <GroupChat />
         <div className="chatHeader">
           <UserAvatar imgSrc={currentUser.photoUrl} size="40px"></UserAvatar>
           <h2>{currentUser.firstName}</h2>
@@ -140,11 +140,7 @@ const ChatGroup = () => {
           </div>
         </div>
       </div>
-      <div className="chatRoomList">
-        {Object.values(chatRooms).map((elem, id) => {
-          return <ChatRoomBox key={id} chatRoomDetail={elem} />;
-        })}
-      </div>
+      <ChatRoomsList chatRooms={chatRooms} />
     </div>
   );
 };

@@ -2,14 +2,19 @@
   position: relative;
   padding-top: 8px;
   background-color: rgba(29, 27, 27, 0.844);
+  background-color: #1d1b1b;
 }
 .chatRooms {
   display: flex;
   padding: 0 10px 3px;
   flex-direction: column;
   gap: 8px;
+  position: relative;
+  z-index: 2;
 }
 .chatRoomList {
+  position: relative;
+  z-index: 1;
   margin-top: 10px;
   border-top: 1px solid #afb7bc26;
 }
