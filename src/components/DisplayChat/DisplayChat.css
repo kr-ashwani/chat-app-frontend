@@ -34,7 +34,7 @@
 }
 .roomName {
   background-color: #202c33;
-  height: 40px;
+  height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -63,13 +63,19 @@
   position: absolute;
   left: 0;
   padding: 10px;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   display: none;
+}
+.fa-arrow-left {
+  cursor: pointer;
 }
 
 @media only screen and (max-width: 800px) {
   .memeberListIcon {
     visibility: visible;
+  }
+  .roomName {
+    height: 50px;
   }
   #root {
     padding: 20px 10px 0 10px;
@@ -79,6 +85,9 @@
   }
   .chatApp {
     height: 100% !important;
+  }
+  #root {
+    padding: 0;
   }
 
   .roomName > i {

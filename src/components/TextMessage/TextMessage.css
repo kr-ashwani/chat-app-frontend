@@ -1,24 +1,40 @@
 .messageBox {
   max-width: 85%;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-self: flex-start;
+  /* gap: 10px; */
   align-items: flex-start;
+  flex-direction: column;
+  align-self: flex-start;
+
+  -ms-word-break: break-all;
+  word-break: break-all;
+  /* Non standard for WebKit  */
+  word-break: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
 }
 .msgText.msgText.userMessage {
   align-self: flex-end;
 }
+.messageCover {
+  display: flex;
+  flex-direction: column;
+}
 
 .msgText {
   font-size: 0.9rem;
-  padding: 10px 10px;
   /* background-color: #1d90f5; */
+  margin-bottom: 5px;
+  padding: 10px 15px;
   background-color: #424656;
   border-radius: 20px 20px 20px 6px / 20px 20px 20px 6px;
   word-wrap: break-word;
   white-space: pre-wrap;
   position: relative;
+}
+.msgText.userMessage {
+  padding: 10px 10px 10px 15px;
 }
 
 .msgSenderInfo {
@@ -29,6 +45,7 @@
   align-items: center;
   gap: 8px;
   align-self: flex-start;
+  padding: 5px 0 10px;
 }
 .msgSenderName {
   color: rgb(184, 179, 179);
@@ -54,13 +71,26 @@
 
 .msgStatus {
   position: absolute;
-  bottom: 1px;
-  right: 8px;
+  bottom: 0;
+  right: 0;
   transform: scale(0.98);
+}
+.msgStatus > * {
+  position: absolute;
+  bottom: 6px;
+  right: 7px;
+  opacity: 1;
+  transition: opacity 200ms ease-in-out;
+}
+.msgStatus > svg.hide {
+  opacity: 0;
 }
 .som {
   display: inline-block;
   width: 20px;
+}
+.svgSeen {
+  color: #22f3fe;
 }
 
 @media only screen and (max-width: 700px) {

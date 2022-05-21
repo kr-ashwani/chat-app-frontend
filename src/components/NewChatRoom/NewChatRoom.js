@@ -32,12 +32,17 @@ const NewChatRoom = ({ chatRooms }) => {
         : false
     );
     if (chatRoom.length === 1) {
-      const { _id: chatRoomID, ...rest } = chatRoom[0];
-      setSelectedChat({ ...rest, chatRoomID, ...userInfo });
+      const { firstName, lastName, photoUrl } = userInfo;
+      setSelectedChat({ ...chatRoom[0], firstName, lastName, photoUrl });
     }
     if (!chatRoom.length) {
-      const { _id: selectedUserID, ...rest } = userInfo;
-      setSelectedChat({ ...rest, selectedUserID, chatRoomID: '' });
+      const { _id: selectedUserID, firstName, lastName, photoUrl } = userInfo;
+      setSelectedChat({
+        selectedUserID,
+        firstName,
+        lastName,
+        photoUrl,
+      });
     }
   }
 

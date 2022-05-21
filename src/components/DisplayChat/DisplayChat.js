@@ -11,7 +11,7 @@ import { useAuth } from '../../context/AuthContext';
 import chattingImg from '../../assets/chatting.svg';
 
 const DisplayChat = () => {
-  const { selectedChat } = useSelectedChat();
+  const { selectedChat, setSelectedChat } = useSelectedChat();
   const [chatRoomMessages, setChatRoomMessages] = useState({});
 
   const { currentUser } = useAuth();
@@ -22,16 +22,16 @@ const DisplayChat = () => {
     async function getChatList(payload) {
       if (payload.error) return console.log(payload.error);
       const roomIdMap = payload.response.reduce((accum, elem) => {
-        socket.emit('message:list', elem._id);
-        return { ...accum, [elem._id]: elem };
+        socket.emit('message:list', { chatRoomID: elem.chatRoomID });
+        return { ...accum, [elem.chatRoomID]: elem };
       }, {});
       const roomMsgMap = payload.response.reduce(
-        (accum, elem) => ({ ...accum, [elem._id]: [] }),
+        (accum, elem) => ({ ...accum, [elem.chatRoomID]: {} }),
         {}
       );
 
-      setChatRooms(roomIdMap);
-      setChatRoomMessages(roomMsgMap);
+      setChatRooms((prev) => ({ ...prev, ...roomIdMap }));
+      setChatRoomMessages((prev) => ({ ...roomMsgMap, ...prev }));
     }
     socket.emit('chatRoom:list', currentUser._id);
     socket.on('chatRoom:list', getChatList);
@@ -43,14 +43,26 @@ const DisplayChat = () => {
     function getChatRoomMessages(payload) {
       if (payload.error) return console.log(payload.error);
 
+      const roomMsgsMap = payload.chatRoomMsgs.reduce(
+        (accum, elem) => ({ ...accum, [elem.messageID]: elem }),
+        {}
+      );
+      Object.values(roomMsgsMap).forEach((msg) => {
+        if (currentUser._id !== msg.senderID && !msg.messageStatus.delievered)
+          socket.emit('message:received', {
+            messageID: msg.messageID,
+            senderID: msg.senderID,
+            chatRoomID: msg.chatRoomID,
+          });
+      });
       setChatRoomMessages((prev) => ({
         ...prev,
-        [payload.chatRoomID]: payload.chatRoomMsgs,
+        [payload.chatRoomID]: { ...prev[payload.chatRoomID], ...roomMsgsMap },
       }));
     }
     socket.on('message:list', getChatRoomMessages);
     return () => socket.off('message:list', getChatRoomMessages);
-  }, [socket]);
+  }, [socket, currentUser]);
 
   useEffect(() => {
     if (selectedChat) {
@@ -80,6 +92,8 @@ const DisplayChat = () => {
             document
               .getElementsByClassName('chatGroup')[0]
               .classList.remove('shift');
+
+            setSelectedChat(null);
           }}></i>
         <UserAvatar imgSrc={selectedChat?.photoUrl} size="25px" />
         <h3 style={{ marginLeft: '10px' }}>

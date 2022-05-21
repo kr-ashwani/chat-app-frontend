@@ -1,4 +1,4 @@
-.viewChat {
+.chatList {
   padding: 20px 20px 10px;
   display: flex;
   flex-direction: column;
@@ -9,17 +9,25 @@
   scrollbar-color: #373f44;
 }
 
-.viewChat::-webkit-scrollbar {
+.chatList::-webkit-scrollbar {
   width: 4px;
 }
 
-.viewChat::-webkit-scrollbar-track {
+.chatList::-webkit-scrollbar-track {
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 
-.viewChat::-webkit-scrollbar-thumb {
+.chatList::-webkit-scrollbar-thumb {
   background-color: #373f44;
   border-radius: 10px;
 
   /* outline: 1px solid slategrey; */
+}
+.viewChat {
+  display: flex;
+  flex-direction: column;
+}
+.initialSpace {
+  flex-grow: 1;
+  /* min-height: 10px; */
 }

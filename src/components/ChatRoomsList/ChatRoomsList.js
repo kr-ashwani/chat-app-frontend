@@ -20,7 +20,6 @@ const ChatRoomsList = ({ chatRooms }) => {
     if (!isMounted.current && roomsList.length) {
       isMounted.current = true;
       roomsList.forEach((elem, id) => {
-        console.log(elem, id);
         document.getElementsByClassName(elem[0])[0].style.cssText = `z-index:${
           69 - id
         };transform:translateY(${id * 72}px)`;
@@ -30,7 +29,6 @@ const ChatRoomsList = ({ chatRooms }) => {
 
     if (isMounted.current)
       roomsList.forEach((elem, id) => {
-        console.log(elem, id);
         document.getElementsByClassName(elem[0])[0].style.cssText = `z-index:${
           69 - id
         };transition: transform 300ms ease-in-out;transform:translateY(${
@@ -42,7 +40,7 @@ const ChatRoomsList = ({ chatRooms }) => {
   return (
     <div className="chatRoomList">
       {Object.values(chatRooms).map((elem) => {
-        return <ChatRoomBox key={elem._id} chatRoomDetail={elem} />;
+        return <ChatRoomBox key={elem.chatRoomID} chatRoomDetail={elem} />;
       })}
     </div>
   );

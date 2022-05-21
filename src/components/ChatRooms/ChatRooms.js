@@ -11,10 +11,19 @@ import ChatRoomsList from '../ChatRoomsList/ChatRoomsList';
 const ChatGroup = () => {
   const { chatRooms, setChatRooms } = useChatRoom();
   const { currentUser, setUser } = useAuth();
+  const mounted = useRef(0);
 
   const { socket } = useSocket();
 
   let container = useRef();
+
+  useEffect(() => {
+    if (currentUser) mounted.current = 1;
+  }, [currentUser, socket]);
+
+  socket.on('disconnect', () => {
+    mounted.current = 5;
+  });
 
   useEffect(() => {
     document.getElementsByTagName('body')[0].addEventListener('click', unSub);
@@ -34,9 +43,12 @@ const ChatGroup = () => {
   }, []);
 
   useEffect(() => {
-    function createChatRoom({ newChat, senderInfo, receiverInfo }) {
-      newChat = { ...senderInfo, ...receiverInfo, ...newChat };
-      setChatRooms((prev) => ({ ...prev, [newChat._id]: newChat }));
+    function createChatRoom({ newChatRoom, firstName, lastName, photoUrl }) {
+      newChatRoom = { firstName, lastName, photoUrl, ...newChatRoom };
+      setChatRooms((prev) => ({
+        ...prev,
+        [newChatRoom.chatRoomID]: newChatRoom,
+      }));
     }
 
     socket.on('DB:chatRoom:create', createChatRoom);
@@ -44,13 +56,12 @@ const ChatGroup = () => {
   }, [socket, setChatRooms]);
 
   useEffect(() => {
-    function updateChatRoom({ updatedChat }) {
-      console.log(updatedChat);
+    function updateChatRoom({ updatedChatRoom }) {
       setChatRooms((prev) => {
-        const prevChatRoom = prev[updatedChat._id];
+        const prevChatRoom = prev[updatedChatRoom.chatRoomID];
         return {
           ...prev,
-          [updatedChat._id]: { ...prevChatRoom, ...updatedChat },
+          [updatedChatRoom.chatRoomID]: { ...prevChatRoom, ...updatedChatRoom },
         };
       });
     }
@@ -69,6 +80,16 @@ const ChatGroup = () => {
       accessToken: null,
     });
   }
+
+  useEffect(() => {
+    function sendMessageSync() {
+      if (mounted.current === 5) socket.emit('chatRoom:list', currentUser._id);
+      // socket.emit('message:sync', 'socket reconnected');
+      mounted.current = 1;
+    }
+    socket.on('message:sync', sendMessageSync);
+    return () => socket.off('message:sync', sendMessageSync);
+  }, [socket, currentUser]);
 
   return (
     <div className={`chatGroup`}>

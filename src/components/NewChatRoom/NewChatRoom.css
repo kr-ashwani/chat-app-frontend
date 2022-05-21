@@ -45,6 +45,11 @@
 .groupChatDetail > .heading > * {
   flex: 1 1 0;
 }
+.newChatRoomDetail > .heading > *:nth-child(2),
+.groupChatDetail > .heading > *:nth-child(2) {
+  text-align: center;
+}
+
 .newChatRoom .next,
 .groupChatDetail .next {
   text-align: right;
@@ -83,6 +88,12 @@
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   scrollbar-color: #373f44;
+}
+.userList > * {
+  cursor: pointer;
+}
+.userList > * :hover {
+  filter: brightness(85%);
 }
 
 .userList::-webkit-scrollbar {
