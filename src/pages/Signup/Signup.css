@@ -6,6 +6,7 @@ form h2 {
 }
 .mainContent {
   display: flex;
+  padding: 0 10px;
 }
 .mainContent > .signupForm,
 .mainContent > .loginForm {

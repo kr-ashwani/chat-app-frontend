@@ -9,6 +9,7 @@ nav {
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
+  padding: 10px 15px;
 }
 .navbar {
   display: flex;
