@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import GroupChat from '../GroupChat/GroupChat';
 import NewChatRoom from '../NewChatRoom/NewChatRoom';
 import './ChatRooms.css';
@@ -11,7 +11,7 @@ import ChatRoomsList from '../ChatRoomsList/ChatRoomsList';
 const ChatGroup = () => {
   const { chatRooms, setChatRooms } = useChatRoom();
   const { currentUser, setUser } = useAuth();
-  const [loading, setLoading] = useState(false);
+  const loading = useRef(false);
   const mounted = useRef(0);
 
   const { socket } = useSocket();
@@ -73,13 +73,13 @@ const ChatGroup = () => {
 
   async function logOut(e) {
     e.preventDefault();
-    if (loading) return;
-    setLoading(true);
+    if (loading.current) return;
+    loading.current = true;
     document.body.style.cursor = 'wait';
     await fetch(`${process.env.REACT_APP_SERVER_ENDPOINT}/logout`, {
       credentials: 'include',
     });
-    setLoading(false);
+    loading.current = false;
     document.body.style.cursor = 'auto';
     setUser({
       currentUser: null,
