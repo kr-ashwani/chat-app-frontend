@@ -10,10 +10,12 @@ import Chat from './pages/Chat/Chat';
 import { SelectedChatProvider } from './context/SelectedChatContext';
 import { SocketProvider } from './context/SocketContext';
 import { ChatRoomProvider } from './context/chatRoomContext';
+import AppLoading from './components/AppLoading/AppLoading';
 
 function App() {
   return (
     <>
+      <AppLoading />
       <Header />
       <Routes>
         <Route

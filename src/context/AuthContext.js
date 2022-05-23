@@ -8,6 +8,7 @@ function useAuth() {
 
 function AuthProvider({ children }) {
   const [user, setUser] = useState({ currentUser: null, accessToken: null });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function getUserInfo() {
@@ -29,6 +30,7 @@ function AuthProvider({ children }) {
 
   useEffect(() => {
     async function getAccessToken() {
+      setLoading(true);
       let res = await fetch(
         `${process.env.REACT_APP_SERVER_ENDPOINT}/auth/refresh`,
         {
@@ -42,6 +44,7 @@ function AuthProvider({ children }) {
       const { accessToken, currentUser } = await res.json();
       if (accessToken)
         setUser((prev) => ({ ...prev, accessToken, currentUser }));
+      setLoading(false);
     }
     getAccessToken();
   }, []);
@@ -49,6 +52,7 @@ function AuthProvider({ children }) {
   const value = {
     ...user,
     setUser,
+    loading,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -1,0 +1,45 @@
+.appLoading {
+  position: fixed;
+  z-index: 10;
+  background-color: #121212;
+  background-color: #0a1014;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.appLoading.hide {
+  display: none;
+}
+.appLogo > img {
+  width: 100px;
+}
+
+.loadingInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+span.appName {
+  margin-top: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.loadingBar {
+  margin-top: 25px;
+  width: 250px;
+  height: 5px;
+  border-radius: 5px;
+  background-color: #233138;
+  overflow: hidden;
+}
+.loadingBar > .bar {
+  width: 0;
+  height: 110%;
+  /* border-radius: 5px; */
+  background-color: rgb(13, 187, 245);
+  transition: width 2s ease-in-out;
+}

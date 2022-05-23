@@ -30,7 +30,7 @@ body {
   flex-direction: column;
   gap: 20px;
 }
-#root > *:nth-child(2) {
+#root > *:nth-child(3) {
   flex-grow: 1;
 }
 
