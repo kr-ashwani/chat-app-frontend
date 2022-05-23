@@ -33,6 +33,7 @@ const AppLoading = () => {
       }
     }
     if (!loading) {
+      console.log('loading false');
       timers.current.forEach((elem) => {
         clearTimeout(elem);
       });
