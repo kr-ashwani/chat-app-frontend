@@ -11,7 +11,6 @@ const AppLoading = () => {
   const appLoading = useRef();
 
   useEffect(() => {
-    console.log(loading);
     if (loading && !timers.current.length) {
       appLoading.current.classList.remove('hide');
       bar.current.style.width = `${15}%`;
