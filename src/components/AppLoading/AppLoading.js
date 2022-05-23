@@ -4,7 +4,7 @@ import appLogo from '../../assets/chatLogo.svg';
 import { useAuth } from '../../context/AuthContext';
 
 const AppLoading = () => {
-  const progress = useRef([10, 30, 40, 60, 70, 80, 90, 95]);
+  const progress = useRef([15, 30, 40, 60, 70, 80, 90, 95]);
   const { loading } = useAuth();
   const timers = useRef([]);
   const bar = useRef();
@@ -14,10 +14,11 @@ const AppLoading = () => {
     console.log(loading);
     if (loading && !timers.current.length) {
       appLoading.current.classList.remove('hide');
+      bar.current.style.width = `${5}%`;
       for (let i = 0; i < progress.current.length; i++) {
         const randNo =
           i === 0
-            ? Math.floor(Math.random() * progress.current[i])
+            ? Math.floor(5 + Math.random() * (progress.current[i] - 5))
             : Math.floor(
                 progress.current[i - 1] +
                   Math.random() *
