@@ -39,7 +39,7 @@ const AppLoading = () => {
       bar.current.style.transition = `width 300ms ease-in-out`;
       setTimeout(() => {
         bar.current.style.width = `100%`;
-      }, 0);
+      }, 50);
       setTimeout(() => {
         appLoading.current.classList.add('hide');
         // bar.current.style.transition = `width 2s ease-in-out`;
