@@ -46,7 +46,7 @@ const AppLoading = () => {
     <div ref={appLoading} className="appLoading">
       <div className="loadingInfo">
         <div className="appLogo">
-          <img src={appLogo} alt="app logo" />
+          <img width={'100'} height={'100'} src={appLogo} alt="app logo" />
         </div>
         <span className="appName">Chatx</span>
         <div className="loadingBar">
