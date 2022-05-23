@@ -40,7 +40,7 @@ const AppLoading = () => {
       bar.current.style.width = `100%`;
       setTimeout(() => {
         appLoading.current.classList.add('hide');
-        bar.current.style.transition = `width 2s ease-in-out`;
+        // bar.current.style.transition = `width 2s ease-in-out`;
       }, 500);
     }
   }, [loading]);
