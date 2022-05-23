@@ -33,19 +33,16 @@ const AppLoading = () => {
       }
     }
     if (!loading) {
-      console.log('loading false');
       timers.current.forEach((elem) => {
         clearTimeout(elem);
       });
-      bar.current.style.transition = `width 300ms ease-in-out`;
+      bar.current.style.transition = `width 190ms ease-in-out`;
       setTimeout(() => {
         bar.current.style.width = `100%`;
-      }, 50);
+      }, 0);
       setTimeout(() => {
-        console.log('goccha');
         appLoading.current.classList.add('hide');
-        // bar.current.style.transition = `width 2s ease-in-out`;
-      }, 2000);
+      }, 200);
     }
   }, [loading]);
 
