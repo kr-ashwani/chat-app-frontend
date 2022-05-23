@@ -14,7 +14,7 @@ const AppLoading = () => {
     console.log(loading);
     if (loading && !timers.current.length) {
       appLoading.current.classList.remove('hide');
-      bar.current.style.width = `${5}%`;
+      bar.current.style.width = `${15}%`;
       for (let i = 0; i < progress.current.length; i++) {
         const randNo =
           i === 0
