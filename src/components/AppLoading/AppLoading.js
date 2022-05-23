@@ -37,9 +37,11 @@ const AppLoading = () => {
         clearInterval(elem);
       });
       setTimeout(() => {
+        bar.current.style.transition = `width 450ms ease-in-out`;
         bar.current.style.width = `100%`;
         appLoading.current.classList.add('hide');
-      }, 200);
+        bar.current.style.transition = `width 2s ease-in-out`;
+      }, 500);
     }
   }, [loading]);
 
