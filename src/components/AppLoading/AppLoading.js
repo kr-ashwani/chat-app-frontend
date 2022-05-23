@@ -36,9 +36,9 @@ const AppLoading = () => {
       timers.current.forEach((elem) => {
         clearInterval(elem);
       });
-      bar.current.style.transition = `width 450ms ease-in-out`;
+      bar.current.style.transition = `width 300ms ease-in-out`;
+      bar.current.style.width = `100%`;
       setTimeout(() => {
-        bar.current.style.width = `100%`;
         appLoading.current.classList.add('hide');
         bar.current.style.transition = `width 2s ease-in-out`;
       }, 500);
