@@ -43,7 +43,7 @@ const AppLoading = () => {
       setTimeout(() => {
         appLoading.current.classList.add('hide');
         // bar.current.style.transition = `width 2s ease-in-out`;
-      }, 500);
+      }, 2000);
     }
   }, [loading]);
 
