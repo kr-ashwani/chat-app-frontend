@@ -41,6 +41,7 @@ const AppLoading = () => {
         bar.current.style.width = `100%`;
       }, 50);
       setTimeout(() => {
+        console.log('goccha');
         appLoading.current.classList.add('hide');
         // bar.current.style.transition = `width 2s ease-in-out`;
       }, 2000);
