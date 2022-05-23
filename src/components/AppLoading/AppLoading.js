@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import './AppLoading.css';
 import appLogo from '../../assets/chatLogo.svg';
 import { useAuth } from '../../context/AuthContext';
