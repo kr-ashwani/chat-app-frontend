@@ -4,7 +4,7 @@ import appLogo from '../../assets/chatLogo.svg';
 import { useAuth } from '../../context/AuthContext';
 
 const AppLoading = () => {
-  const progress = useRef([15, 30, 40, 60, 70, 80, 90, 95]);
+  const progress = useRef([30, 40, 60, 70, 80, 90, 95]);
   const { loading } = useAuth();
   const timers = useRef([]);
   const bar = useRef();
