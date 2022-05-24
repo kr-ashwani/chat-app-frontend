@@ -42,5 +42,6 @@ span.appName {
   height: 110%;
   /* border-radius: 5px; */
   background-color: rgb(13, 187, 245);
+  background-color: #1d90f5;
   transition: width 2s ease-in-out;
 }
