@@ -8,6 +8,9 @@ const Login = () => {
   const { setUser, currentUser } = useAuth();
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(false);
+  const loginBtn = useRef();
+
   const [loginData, setLoginData] = useState({
     email: '',
     password: '',
@@ -61,6 +64,7 @@ const Login = () => {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setLoading(true);
     if (password.trim().length < 6) return;
     try {
       const response = await fetch(
@@ -79,6 +83,7 @@ const Login = () => {
       const { accessToken, currentUser } = await response.json();
       if (accessToken)
         setUser((prev) => ({ ...prev, accessToken, currentUser }));
+      setLoading(false);
     } catch (err) {
       setExtaMessage((prev) => ({
         ...prev,
@@ -87,8 +92,19 @@ const Login = () => {
           payload: err.message,
         },
       }));
+      setLoading(false);
     }
   }
+
+  useEffect(() => {
+    if (loading) {
+      loginBtn.current.disabled = true;
+      document.body.style.cursor = 'wait';
+    } else {
+      loginBtn.current.disabled = false;
+      document.body.style.cursor = 'auto';
+    }
+  }, [loading]);
 
   return (
     <div className="mainContent">
@@ -131,7 +147,9 @@ const Login = () => {
           <div className={`responseError ${extraMessage?.resErr?.type}`}>
             {extraMessage?.resErr?.payload}
           </div>
-          <button type="submit">Log in</button>
+          <button ref={loginBtn} type="submit">
+            Log in
+          </button>
         </form>
       </div>
     </div>

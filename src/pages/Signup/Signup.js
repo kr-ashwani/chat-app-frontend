@@ -16,6 +16,8 @@ const Signup = () => {
     authProvider: 'emailPassword',
     photoUrl: '',
   });
+  const [loading, setLoading] = useState(false);
+  const signupBtn = useRef();
   const [extraMessage, setExtaMessage] = useState({});
   const pwdMsg = useRef({
     pwdEntered: false,
@@ -94,6 +96,7 @@ const Signup = () => {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setLoading(true);
     setExtaMessage((prev) => ({ ...prev, resErr: {} }));
     if (password.trim().length < 6) return;
     if (password.trim() !== confirmPassword.trim()) return;
@@ -122,6 +125,7 @@ const Signup = () => {
         });
         // navigate('/');
       }
+      setLoading(false);
     } catch (err) {
       setExtaMessage((prev) => ({
         ...prev,
@@ -130,8 +134,19 @@ const Signup = () => {
           type: 'error',
         },
       }));
+      setLoading(false);
     }
   }
+
+  useEffect(() => {
+    if (loading) {
+      signupBtn.current.disabled = true;
+      document.body.style.cursor = 'wait';
+    } else {
+      signupBtn.current.disabled = false;
+      document.body.style.cursor = 'auto';
+    }
+  }, [loading]);
 
   return (
     <div className="mainContent">
@@ -215,7 +230,9 @@ const Signup = () => {
           <div className={`responseError ${extraMessage?.resErr?.type}`}>
             {extraMessage?.resErr?.payload}
           </div>
-          <button type="submit">Sign Up</button>
+          <button ref={signupBtn} type="submit">
+            Sign Up
+          </button>
         </form>
       </div>
     </div>
