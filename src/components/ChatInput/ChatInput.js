@@ -239,8 +239,9 @@ const ChatInput = ({ setChatRoomMessages }) => {
 
     console.log(chatRooms);
     setMessage('');
-    messageDiv.current.focus();
+    console.log(messageDiv.current);
     messageDiv.current.innerText = '';
+    messageDiv.current.focus();
   }
 
   useEffect(() => {
@@ -308,10 +309,6 @@ const ChatInput = ({ setChatRoomMessages }) => {
     chatList.style.scrollBehavior = 'auto';
   }, [message]);
 
-  function scrollAppOnBlur() {
-    // alert('hello');
-  }
-
   return (
     <div className="chatInput">
       <div className="emoji">
@@ -334,10 +331,8 @@ const ChatInput = ({ setChatRoomMessages }) => {
           ref={messageDiv}
           className="inputMessage"
           contentEditable="true"
-          title="Type a message"
           onInput={(e) => setMessage(e.target.innerText)}
-          onPaste={(e) => pasteInput(e)}
-          onBlur={scrollAppOnBlur}></div>
+          onPaste={(e) => pasteInput(e)}></div>
       </div>
       <div className="sendBtn">
         <i className="fa-solid fa-paper-plane" onClick={sendMessage}></i>
