@@ -13,7 +13,6 @@ import { ChatRoomProvider } from './context/chatRoomContext';
 import AppLoading from './components/AppLoading/AppLoading';
 
 function App() {
-  console.log('hello');
   return (
     <>
       <AppLoading />
