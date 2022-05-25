@@ -13,6 +13,7 @@ import { ChatRoomProvider } from './context/chatRoomContext';
 import AppLoading from './components/AppLoading/AppLoading';
 
 function App() {
+  console.log('testing production branch');
   return (
     <>
       <AppLoading />
