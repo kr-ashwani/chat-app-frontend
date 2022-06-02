@@ -6,7 +6,7 @@ import useSelectedChat from '../../hooks/useSelectedChat';
 import './ChatInput.css';
 import { v4 as uuid } from 'uuid';
 
-const ChatInput = ({ setChatRoomMessages }) => {
+const ChatInput = ({ chatRoomMessages, setChatRoomMessages }) => {
   const { currentUser } = useAuth();
   const [message, setMessage] = useState('');
   const emojiPicker = useRef();
@@ -53,7 +53,7 @@ const ChatInput = ({ setChatRoomMessages }) => {
     };
   }, []);
 
-  //  setting input width
+  //  adjusting input width
   useEffect(() => {
     const chatDiv = document.getElementsByClassName('chatToSend')[0];
     chatDiv.style.width = `${chatDiv.offsetWidth}px`;
@@ -94,7 +94,7 @@ const ChatInput = ({ setChatRoomMessages }) => {
     window.getSelection().collapseToEnd();
   }
 
-  //message is sent to server and local message and chatRoom State is changed
+  //message is sent to server and local message and chatRoom State is updated
   function sendMessage() {
     messageDiv.current.focus();
     if (!message.length || (message.length && !message.trim().length)) {
@@ -108,6 +108,7 @@ const ChatInput = ({ setChatRoomMessages }) => {
     // const chatRoomID = uuid();
     const createdAt = new Date().getTime();
 
+    let msgInfoTime = null;
     const messageData = {
       senderID: currentUser._id,
       senderPhotoUrl: currentUser.photoUrl,
@@ -127,25 +128,81 @@ const ChatInput = ({ setChatRoomMessages }) => {
     };
 
     if (selectedChat.chatRoomID) {
+      const chatMsgsArr = Object.values(
+        chatRoomMessages[selectedChat.chatRoomID]
+      );
+      const prevMsg = chatMsgsArr[chatMsgsArr.length - 1];
+      const check =
+        messageData.createdAt - prevMsg.createdAt > 24 * 60 * 60 * 1000
+          ? true
+          : new Date(messageData.createdAt).getDay() -
+              new Date(prevMsg.createdAt).getDay() >
+            0
+          ? true
+          : false;
+
+      if (check)
+        msgInfoTime = {
+          senderID: currentUser._id,
+          senderPhotoUrl: currentUser.photoUrl,
+          senderName: currentUser.firstName + ' ' + currentUser.lastName,
+          message: '',
+          messageType: 'information',
+          createdAt: createdAt - 2,
+          updatedAt: createdAt - 2,
+          showUserInfo: false,
+          messageID: uuid(),
+          chatRoomID: selectedChat.chatRoomID,
+          messageStatus: {
+            seen: false,
+            sent: false,
+            delivered: false,
+          },
+        };
       if (!pendingMsg.current[selectedChat.chatRoomID])
         pendingMsg.current[selectedChat.chatRoomID] = [];
 
-      pendingMsg.current[selectedChat.chatRoomID].push(messageData);
+      if (check) pendingMsg.current[selectedChat.chatRoomID].push(msgInfoTime);
+      else pendingMsg.current[selectedChat.chatRoomID].push(messageData);
 
       if (socket.connected)
-        if (pendingMsg.current[selectedChat.chatRoomID].length === 1)
-          socket.emit('online:message', { messageData });
+        if (pendingMsg.current[selectedChat.chatRoomID].length === 1) {
+          socket.emit('online:message', {
+            messageData: pendingMsg.current[selectedChat.chatRoomID][0],
+          });
+        }
+
+      if (check) pendingMsg.current[selectedChat.chatRoomID].push(messageData);
     } else {
-      socket.emit('chatRoom:create', {
-        lastMessage: message.trim(),
-        lastMessageType: 'text',
-        lastMessageID: messageID,
-        updatedAt: createdAt,
-        createdAt,
+      msgInfoTime = {
+        senderID: currentUser._id,
+        senderPhotoUrl: currentUser.photoUrl,
+        senderName: currentUser.firstName + ' ' + currentUser.lastName,
+        message: '',
+        messageType: 'information',
+        createdAt: createdAt - 2,
+        updatedAt: createdAt - 2,
+        showUserInfo: false,
+        messageID: uuid(),
         chatRoomID: messageData.chatRoomID,
-        lastMessageTimestamp: createdAt,
+        messageStatus: {
+          seen: false,
+          sent: false,
+          delivered: false,
+        },
+      };
+
+      socket.emit('chatRoom:create', {
+        lastMessage: 'time',
+        lastMessageType: 'information',
+        lastMessageID: msgInfoTime.messageID,
+        updatedAt: createdAt - 2,
+        createdAt: createdAt - 2,
+        chatRoomID: messageData.chatRoomID,
+        lastMessageTimestamp: createdAt - 2,
         participants: [currentUser._id, selectedChat.selectedUserID],
         messageData,
+        msgInfoTime,
       });
 
       pendingChatRoom.current.push(messageData.chatRoomID);
@@ -189,6 +246,15 @@ const ChatInput = ({ setChatRoomMessages }) => {
           if ((currentMessageTime - previousMessageTime) / (1000 * 60) < 1)
             previousTextMessage.showUserInfo = false;
         }
+        if (msgInfoTime)
+          return {
+            ...prev,
+            [selectedChat.chatRoomID]: {
+              ...messageListClone,
+              [msgInfoTime.messageID]: msgInfoTime,
+              [messageID]: messageData,
+            },
+          };
         return {
           ...prev,
           [selectedChat.chatRoomID]: {
@@ -220,7 +286,10 @@ const ChatInput = ({ setChatRoomMessages }) => {
 
       setChatRoomMessages((prev) => ({
         ...prev,
-        [messageData.chatRoomID]: { [messageID]: messageData },
+        [messageData.chatRoomID]: {
+          [msgInfoTime.messageID]: msgInfoTime,
+          [messageID]: messageData,
+        },
       }));
       setSelectedChat(chatRoomData);
 
@@ -237,19 +306,21 @@ const ChatInput = ({ setChatRoomMessages }) => {
       }, 200);
     }
 
-    console.log(chatRooms);
     setMessage('');
-    console.log(messageDiv.current);
     messageDiv.current.innerText = '';
     messageDiv.current.focus();
   }
 
   useEffect(() => {
-    function sendNewMessage({ messageData }) {
+    function sendNewMessage({ messageData, msgInfoTime }) {
       pendingChatRoom.current = pendingChatRoom.current.filter(
         (elem) => elem !== messageData.chatRoomID
       );
-      socket.emit('message:create', { messageData, checkPending: true });
+      pendingMsg.current[messageData.chatRoomID].push(messageData);
+      socket.emit('message:create', {
+        messageData: msgInfoTime,
+        checkPending: true,
+      });
     }
     socket.on('chatRoom:create:success', sendNewMessage);
     return () => socket.off('chatRoom:create:success', sendNewMessage);

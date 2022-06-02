@@ -95,7 +95,7 @@ const DisplayChat = () => {
 
             setSelectedChat(null);
           }}></i>
-        <UserAvatar imgSrc={selectedChat?.photoUrl} size="25px" />
+        <UserAvatar imgSrc={selectedChat?.photoUrl} size="30px" />
         <h3 style={{ marginLeft: '10px' }}>
           {selectedChat
             ? selectedChat.firstName + ' ' + selectedChat.lastName
@@ -106,7 +106,10 @@ const DisplayChat = () => {
         setChatRoomMessages={setChatRoomMessages}
         chatRoomMessages={chatRoomMessages}
       />
-      <ChatInput setChatRoomMessages={setChatRoomMessages} />
+      <ChatInput
+        chatRoomMessages={chatRoomMessages}
+        setChatRoomMessages={setChatRoomMessages}
+      />
     </div>
   );
 };

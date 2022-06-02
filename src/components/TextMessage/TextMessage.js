@@ -1,4 +1,6 @@
 import React from 'react';
+import { getDateString } from '../../utils/getdateString';
+
 import UserAvatar from '../UserAvatar/UserAvatar';
 import './TextMessage.css';
 import { useAuth } from '../../context/AuthContext';
@@ -6,7 +8,7 @@ import dateFormat from 'dateformat';
 
 const TextMessage = ({ message }) => {
   const { currentUser } = useAuth();
-  const extraInfo = message.type === 'information' ? true : false;
+  const extraInfo = message.messageType === 'information' ? true : false;
   const messageOfUserItself =
     message.senderID === currentUser._id ? true : false;
   const userMessageClass = messageOfUserItself ? 'userMessage' : '';
@@ -100,12 +102,7 @@ const TextMessage = ({ message }) => {
     </div>
   ) : (
     <div className="extraInfo">
-      <p>
-        {message.userInfo.userName.length >= 20
-          ? message.userInfo.userName.slice(0, 20) + '...'
-          : message.userInfo.userName}{' '}
-        has joined.
-      </p>
+      <p>{getDateString(message.createdAt, true)}</p>
     </div>
   );
 };

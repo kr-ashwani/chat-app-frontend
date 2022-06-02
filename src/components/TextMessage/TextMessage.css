@@ -64,9 +64,14 @@
 
 .extraInfo {
   align-self: center;
-  color: #79797c;
-  font-size: 0.85rem;
   margin: 15px 0;
+
+  color: #8696a0;
+  font-size: 0.9rem;
+  padding: 2px 15px 5px;
+  border-radius: 20px;
+  background-color: #202c33;
+  box-shadow: 0 1px 0.5px rgba(var(--shadow-rgb), 0.13);
 }
 
 .msgStatus {
@@ -98,6 +103,6 @@
     font-size: 1rem;
   }
   .extraInfo {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
   }
 }

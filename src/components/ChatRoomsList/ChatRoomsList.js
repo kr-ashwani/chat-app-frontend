@@ -31,7 +31,7 @@ const ChatRoomsList = ({ chatRooms }) => {
       roomsList.forEach((elem, id) => {
         document.getElementsByClassName(elem[0])[0].style.cssText = `z-index:${
           69 - id
-        };transition: transform 300ms ease-in-out;transform:translateY(${
+        };transition: transform 450ms ease-in-out;transform:translateY(${
           id * 72
         }px)`;
       });

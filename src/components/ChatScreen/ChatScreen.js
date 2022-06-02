@@ -53,13 +53,14 @@ const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
   }, [selectedChat]);
 
   // socket realtime new message
+
   useEffect(() => {
     function newMessage({ newMsg, lastMsg }) {
       setChatRoomMessages((prev) => {
         const prevMsgs = prev[newMsg?.chatRoomID];
         console.log('previous msg', prevMsgs);
         console.log('last msg', lastMsg);
-        if (prevMsgs && prevMsgs[lastMsg.messageID]?.showUserInfo)
+        if (prevMsgs && lastMsg && prevMsgs[lastMsg.messageID]?.showUserInfo)
           prevMsgs[lastMsg.messageID].showUserInfo = lastMsg.showUserInfo;
 
         if (newMsg.senderID === currentUser._id) scrollMsg.current = 1;
@@ -94,7 +95,7 @@ const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
         }, 100);
 
       if (currentUser._id !== newMsg.senderID)
-        if (selectedChat.chatRoomID === newMsg.chatRoomID)
+        if (selectedChat?.chatRoomID === newMsg.chatRoomID)
           setTimeout(() => {
             socket.emit('message:seen', {
               messageID: newMsg.messageID,

@@ -40,24 +40,41 @@
 .chatRoomMsg {
   padding-top: 2px;
   font-size: 0.9rem;
+  display: flex;
   color: #8696a0;
 }
 .chatRoomMsg > span {
-  display: block;
-  width: 100px;
+  display: inline-block;
+  width: 10px;
+  flex-grow: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  padding-right: 20px;
+  line-height: 1.3rem;
 }
 
 .chatRoomName {
   display: flex;
   padding-right: 15px;
-  font-size: 0.9rem;
 }
-.chatRoomName > span {
+.chatRoomName > span:nth-child(2) {
+  font-size: 0.7rem;
+  line-height: 0.9rem;
+  padding: 3px 0 0 6px;
   color: #8696a0;
 }
-.chatRoomName > h4 {
+.chatRoomName > span:first-child {
+  font-size: 1.1rem;
+  line-height: 1.3rem;
+  font-weight: 400;
+  color: #e9edef;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: inline-block;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  width: 1px;
+  padding-right: 15px;
   flex-grow: 1;
 }
