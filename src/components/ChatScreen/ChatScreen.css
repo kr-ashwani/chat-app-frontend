@@ -7,6 +7,7 @@
   color: #e8ebec;
   scrollbar-width: thin;
   scrollbar-color: #373f44;
+  position: relative;
 }
 
 .chatList::-webkit-scrollbar {
@@ -30,4 +31,61 @@
 .initialSpace {
   flex-grow: 1;
   /* min-height: 10px; */
+}
+.replyMessagePreview {
+  background-color: #202c33;
+  height: auto;
+  transition: height 200ms ease-in-out;
+}
+.replyMessagePreview.hide {
+  height: 0;
+}
+.msgReplyPreview {
+  padding: 8px 20px 0 45px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.msgReplyPreview > .msgPreview {
+  border-radius: 10px;
+  flex-grow: 1;
+  background-color: #1d1b1b;
+  color: #e9edef;
+  padding: 15px 10px;
+  display: flex;
+  gap: 5px;
+  flex-direction: column;
+}
+.msgPreview > span:nth-child(1) {
+  display: flex;
+  align-items: center;
+  line-height: 1.5rem;
+  gap: 8px;
+}
+.msgPreview > span:nth-child(2) {
+  display: flex;
+  color: #8696a0;
+}
+.msgPreview > span:nth-child(2) > p {
+  width: 0;
+  flex-grow: 1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: inline-block;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  padding-left: 10px;
+}
+.closeReply {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  transform: scale(1.1);
+  margin-top: 5px;
+}
+
+@media only screen and (max-width: 700px) {
+  .msgReplyPreview {
+    padding-left: 10px;
+  }
 }

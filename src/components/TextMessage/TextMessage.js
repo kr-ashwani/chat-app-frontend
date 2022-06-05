@@ -5,6 +5,8 @@ import UserAvatar from '../UserAvatar/UserAvatar';
 import './TextMessage.css';
 import { useAuth } from '../../context/AuthContext';
 import dateFormat from 'dateformat';
+import ReplyMessage from '../ReplyMessage/ReplyMessage';
+import useReply from '../../hooks/useReply';
 
 const TextMessage = ({ message }) => {
   const { currentUser } = useAuth();
@@ -20,11 +22,33 @@ const TextMessage = ({ message }) => {
     ? 'sent'
     : 'pending';
 
+  const { repliedMessage, setRepliedMessage } = useReply();
+
+  function replyToMessage(e) {
+    if (e.target !== e.currentTarget) return;
+    if (repliedMessage.messageID !== e.target.dataset.messageId)
+      setRepliedMessage((prev) => ({
+        ...prev,
+        replied: true,
+        messageID: e.target.dataset.messageId,
+      }));
+  }
+
   return !extraInfo ? (
-    <div className={`messageCover`}>
-      <div className={`messageBox ${userMessageClass}`}>
+    <div
+      className={`messageCover`}
+      data-message-id={`${message.messageID}`}
+      onDoubleClick={(e) => replyToMessage(e)}>
+      <div
+        className={`messageBox ${userMessageClass}`}
+        id={`${message.messageID}`}>
         <div className={`msgText ${userMessageClass}`}>
-          <div>
+          {message?.repliedMessage?.replied ? (
+            <ReplyMessage repliedMessage={message?.repliedMessage} />
+          ) : (
+            <></>
+          )}
+          <div className="msg">
             <span>{message.message}</span>
             {messageOfUserItself ? <span className="som">&nbsp;</span> : null}
           </div>

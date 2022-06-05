@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import ChatRooms from '../../components/ChatRooms/ChatRooms';
 import DisplayChat from '../../components/DisplayChat/DisplayChat';
 import { useAuth } from '../../context/AuthContext';
+import { ReplyMessageProvider } from '../../context/ReplyMessageContext';
 import { useSocket } from '../../context/SocketContext';
 
 import './Chat.css';
@@ -22,7 +23,9 @@ function Chat() {
       <div className="chatApp">
         <div className="chatSection">
           <ChatRooms />
-          <DisplayChat />
+          <ReplyMessageProvider>
+            <DisplayChat />
+          </ReplyMessageProvider>
         </div>
       </div>
     </>

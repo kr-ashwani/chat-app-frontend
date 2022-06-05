@@ -4,12 +4,19 @@ import useSelectedChat from '../../hooks/useSelectedChat';
 import { useSocket } from '../../context/SocketContext';
 import TextMessage from '../TextMessage/TextMessage';
 import { useAuth } from '../../context/AuthContext';
+import useReply from '../../hooks/useReply';
+import animateAutoHeight from '../../utils/animateAutoHeight';
+import UserAvatar from '../UserAvatar/UserAvatar';
+import { smoothScrollTo } from '../../utils/smoothScroll';
+import chatListReplyScroll from '../../utils/chatListReplyScroll';
 
 const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
   const { selectedChat } = useSelectedChat();
   const { socket } = useSocket();
   const { currentUser } = useAuth();
   const scrollMsg = useRef(0);
+
+  const { repliedMessage, setRepliedMessage } = useReply();
 
   useEffect(() => {
     console.log('selectedChat : ', selectedChat);
@@ -190,6 +197,75 @@ const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
         .classList.add('selected');
   }, [selectedChat]);
 
+  function noReply() {
+    const scroll = animateAutoHeight(
+      document.getElementsByClassName('replyMessagePreview')[0],
+      'hide',
+      'hide'
+    );
+    const chatList = document.getElementsByClassName('chatList')[0];
+    if (iOS())
+      if (
+        chatList.scrollHeight - chatList.scrollTop - chatList.clientHeight >
+        -1 * scroll
+      )
+        chatList.scrollTo({
+          top: chatList.scrollTop + scroll,
+          behavior: 'smooth',
+        });
+      else
+        chatList.scrollTo({
+          top: chatList.scrollHeight,
+          behavior: 'smooth',
+        });
+    else
+      smoothScrollTo({
+        top: chatList.scrollTop + scroll,
+        duration: 200,
+        element: chatList,
+      });
+    setTimeout(() => {
+      setRepliedMessage({
+        replied: false,
+        message: null,
+        replierID: '',
+        messageType: '',
+        messageThumbnail: '',
+        messageID: '',
+        userName: '',
+        userID: '',
+        userPhotoUrl: '',
+      });
+    }, 200);
+  }
+  useEffect(() => {
+    if (repliedMessage.message) {
+      document.getElementsByClassName('inputMessage')[0].focus();
+      const scroll = animateAutoHeight(
+        document.getElementsByClassName('replyMessagePreview')[0],
+        'hide',
+        'show'
+      );
+      const chatList = document.getElementsByClassName('chatList')[0];
+
+      chatListReplyScroll(chatList, scroll);
+    }
+  }, [repliedMessage.message]);
+
+  useEffect(() => {
+    setRepliedMessage({
+      replied: false,
+      message: null,
+      messageType: '',
+      replierID: '',
+      messageThumbnail: '',
+      messageID: '',
+      userName: '',
+      userID: '',
+      userPhotoUrl: '',
+    });
+  }, [selectedChat, setRepliedMessage]);
+
   return (
     <>
       <div className="viewChat">
@@ -203,6 +279,39 @@ const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
             )
           ) : (
             <></>
+          )}
+        </div>
+        <div className="replyMessagePreview hide">
+          {repliedMessage.message === null ? (
+            <></>
+          ) : (
+            <div className="msgReplyPreview">
+              <div className="msgPreview">
+                <span>
+                  <UserAvatar
+                    imgSrc={repliedMessage.userPhotoUrl}
+                    size="25px"
+                  />
+                  <p>
+                    {currentUser._id === repliedMessage.userID
+                      ? 'You'
+                      : repliedMessage.userName}
+                  </p>
+                </span>
+                <span className="repMsg">
+                  <p>{repliedMessage.message}</p>
+                </span>
+              </div>
+              <div className="closeReply" onClick={noReply}>
+                <svg
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24">
+                  <path d="m19.1 17.2-5.3-5.3 5.3-5.3-1.8-1.8-5.3 5.4-5.3-5.3-1.8 1.7 5.3 5.3-5.3 5.3L6.7 19l5.3-5.3 5.3 5.3 1.8-1.8z"></path>
+                </svg>
+              </div>
+            </div>
           )}
         </div>
       </div>

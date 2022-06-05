@@ -5,6 +5,7 @@ import useChatRoom from '../../hooks/useChatRoom';
 import useSelectedChat from '../../hooks/useSelectedChat';
 import './ChatInput.css';
 import { v4 as uuid } from 'uuid';
+import useReply from '../../hooks/useReply';
 
 const ChatInput = ({ chatRoomMessages, setChatRoomMessages }) => {
   const { currentUser } = useAuth();
@@ -18,7 +19,9 @@ const ChatInput = ({ chatRoomMessages, setChatRoomMessages }) => {
 
   const { selectedChat, setSelectedChat } = useSelectedChat();
   const { socket } = useSocket();
-  const { chatRooms, setChatRooms } = useChatRoom();
+  const { setChatRooms } = useChatRoom();
+
+  const { setRepliedMessage, repliedMessage } = useReply();
 
   //emoji pick logic
   useEffect(() => {
@@ -102,6 +105,7 @@ const ChatInput = ({ chatRoomMessages, setChatRoomMessages }) => {
       messageDiv.current.innerText = '';
       return;
     }
+    if (!selectedChat) return;
     console.log('message sent : ', message);
 
     const messageID = uuid();
@@ -125,6 +129,7 @@ const ChatInput = ({ chatRoomMessages, setChatRoomMessages }) => {
         sent: false,
         delivered: false,
       },
+      repliedMessage,
     };
 
     if (selectedChat.chatRoomID) {
@@ -135,9 +140,8 @@ const ChatInput = ({ chatRoomMessages, setChatRoomMessages }) => {
       const check =
         messageData.createdAt - prevMsg.createdAt > 24 * 60 * 60 * 1000
           ? true
-          : new Date(messageData.createdAt).getDay() -
-              new Date(prevMsg.createdAt).getDay() >
-            0
+          : new Date(messageData.createdAt).getDay() !==
+            new Date(prevMsg.createdAt).getDay()
           ? true
           : false;
 
@@ -308,6 +312,17 @@ const ChatInput = ({ chatRoomMessages, setChatRoomMessages }) => {
 
     setMessage('');
     messageDiv.current.innerText = '';
+    setRepliedMessage({
+      replied: false,
+      message: null,
+      messageType: '',
+      replierID: '',
+      messageThumbnail: '',
+      messageID: '',
+      userName: '',
+      userID: '',
+      userPhotoUrl: '',
+    });
     messageDiv.current.focus();
   }
 
@@ -380,6 +395,33 @@ const ChatInput = ({ chatRoomMessages, setChatRoomMessages }) => {
     chatList.style.scrollBehavior = 'auto';
   }, [message]);
 
+  useEffect(() => {
+    if (!repliedMessage.replied) return;
+
+    const message =
+      chatRoomMessages[selectedChat.chatRoomID][repliedMessage.messageID];
+
+    if (!message) return;
+    setRepliedMessage({
+      replied: true,
+      replierID: currentUser._id,
+      message: message.message,
+      messageType: message.messageType,
+      messageThumbnail: message.messageThubnail,
+      messageID: message.messageID,
+      userName: message.senderName,
+      userID: message.senderID,
+      userPhotoUrl: message.senderPhotoUrl,
+    });
+  }, [
+    chatRoomMessages,
+    repliedMessage.replied,
+    setRepliedMessage,
+    selectedChat,
+    repliedMessage.messageID,
+    currentUser,
+  ]);
+
   return (
     <div className="chatInput">
       <div className="emoji">
@@ -394,6 +436,7 @@ const ChatInput = ({ chatRoomMessages, setChatRoomMessages }) => {
           }}></i>
         <emoji-picker ref={emojiPicker} className="emojiHide"></emoji-picker>
       </div>
+
       <div className="chatToSend">
         <div className="inputTitle" onClick={() => messageDiv.current.focus()}>
           Type a message

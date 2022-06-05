@@ -1,0 +1,37 @@
+.reply {
+  cursor: pointer;
+  margin: 5px 5px -5px;
+  background-color: #342c2c;
+  background-color: #2f2d2d;
+  /* background-color:#202c33; */
+  /* background-color:#322727; */
+  padding: 10px;
+  border-radius: 15px;
+}
+.reply.userMessage {
+  background-color: #1960a4;
+}
+.replyUser {
+  display: flex;
+  gap: 10px;
+}
+.replyUser > span {
+  display: flex;
+  flex-grow: 1;
+}
+.replyMsg {
+  display: flex;
+  padding: 5px 0 0 5px;
+  color: #8696a0;
+  color: #cacdcf;
+}
+.replyMsg > p,
+.replyUser > span > p {
+  width: 80px;
+  flex-grow: 1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: inline-block;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
