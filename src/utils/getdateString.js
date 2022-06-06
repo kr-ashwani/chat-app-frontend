@@ -21,8 +21,8 @@ const getDateString = (givenTimestamp, viewChat) => {
   else if (daysDiff <= 7)
     return currentTimestamp.getDay() - givenTimestamp.getDay() !== 0
       ? dateFormat(givenTimestamp, 'dddd')
-      : dateFormat(givenTimestamp, 'mm/dd/yyyy');
-  else return dateFormat(givenTimestamp, 'mm/dd/yyyy');
+      : dateFormat(givenTimestamp, 'dd/mm/yyyy');
+  else return dateFormat(givenTimestamp, 'dd/mm/yyyy');
 };
 
 export { getDateString };
