@@ -162,6 +162,7 @@ const ChatInput = ({ chatRoomMessages, setChatRoomMessages }) => {
             sent: false,
             delivered: false,
           },
+          repliedMessage,
         };
       if (!pendingMsg.current[selectedChat.chatRoomID])
         pendingMsg.current[selectedChat.chatRoomID] = [];
