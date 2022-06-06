@@ -5,16 +5,14 @@ import { useSocket } from '../../context/SocketContext';
 import TextMessage from '../TextMessage/TextMessage';
 import { useAuth } from '../../context/AuthContext';
 import useReply from '../../hooks/useReply';
-import animateAutoHeight from '../../utils/animateAutoHeight';
 import UserAvatar from '../UserAvatar/UserAvatar';
-import { smoothScrollTo } from '../../utils/smoothScroll';
-import chatListReplyScroll from '../../utils/chatListReplyScroll';
 
 const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
   const { selectedChat } = useSelectedChat();
   const { socket } = useSocket();
   const { currentUser } = useAuth();
   const scrollMsg = useRef(0);
+  const prevMsg = useRef(null);
 
   const { repliedMessage, setRepliedMessage } = useReply();
 
@@ -65,8 +63,6 @@ const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
     function newMessage({ newMsg, lastMsg }) {
       setChatRoomMessages((prev) => {
         const prevMsgs = prev[newMsg?.chatRoomID];
-        console.log('previous msg', prevMsgs);
-        console.log('last msg', lastMsg);
         if (prevMsgs && lastMsg && prevMsgs[lastMsg.messageID]?.showUserInfo)
           prevMsgs[lastMsg.messageID].showUserInfo = lastMsg.showUserInfo;
 
@@ -198,32 +194,13 @@ const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
   }, [selectedChat]);
 
   function noReply() {
-    const scroll = animateAutoHeight(
-      document.getElementsByClassName('replyMessagePreview')[0],
-      'hide',
-      'hide'
-    );
     const chatList = document.getElementsByClassName('chatList')[0];
-    if (iOS())
-      if (
-        chatList.scrollHeight - chatList.scrollTop - chatList.clientHeight >
-        -1 * scroll
-      )
-        chatList.scrollTo({
-          top: chatList.scrollTop + scroll,
-          behavior: 'smooth',
-        });
-      else
-        chatList.scrollTo({
-          top: chatList.scrollHeight,
-          behavior: 'smooth',
-        });
-    else
-      smoothScrollTo({
-        top: chatList.scrollTop + scroll,
-        duration: 200,
-        element: chatList,
-      });
+    const msgelem = document.getElementsByClassName('msgReplyPreview')[0];
+
+    chatList.scrollTop -= msgelem.clientHeight;
+    chatList.style.setProperty('height', '100%');
+    chatList.style.transform = `translateY(0)`;
+    msgelem.style.transform = 'translateY(0%)';
     setTimeout(() => {
       setRepliedMessage({
         replied: false,
@@ -236,23 +213,36 @@ const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
         userID: '',
         userPhotoUrl: '',
       });
-    }, 200);
+    }, 510);
   }
   useEffect(() => {
-    if (repliedMessage.message) {
+    if (prevMsg.current === null && repliedMessage.message) {
       document.getElementsByClassName('inputMessage')[0].focus();
-      const scroll = animateAutoHeight(
-        document.getElementsByClassName('replyMessagePreview')[0],
-        'hide',
-        'show'
-      );
       const chatList = document.getElementsByClassName('chatList')[0];
+      const msgelem = document.getElementsByClassName('msgReplyPreview')[0];
+      const contentHeight = msgelem.clientHeight;
 
-      chatListReplyScroll(chatList, scroll);
+      setTimeout(() => {
+        chatList.style.setProperty('height', `calc(100% - ${contentHeight}px)`);
+        chatList.scrollTop += contentHeight;
+      }, 500);
+
+      chatList.style.transform = `translateY(${-1 * contentHeight}px)`;
+      msgelem.style.transform = 'translateY(-100%)';
     }
-  }, [repliedMessage.message]);
+    prevMsg.current = repliedMessage.message;
+  }, [repliedMessage.messageID, repliedMessage.message]);
 
   useEffect(() => {
+    const chatList = document.getElementsByClassName('chatList')[0];
+    const msgelem = document.getElementsByClassName('msgReplyPreview')[0];
+
+    if (msgelem && chatList) {
+      chatList.scrollTop -= msgelem.clientHeight;
+      chatList.style.setProperty('height', '100%');
+      chatList.style.transform = `translateY(0)`;
+      msgelem.style.transform = 'translateY(0%)';
+    }
     setRepliedMessage({
       replied: false,
       message: null,
@@ -269,8 +259,8 @@ const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
   return (
     <>
       <div className="viewChat">
-        <div className="initialSpace"></div>
         <div className="chatList">
+          <div className="initialSpace"></div>
           {chatRoomMessages[selectedChat?.chatRoomID] ? (
             Object.entries(chatRoomMessages[selectedChat.chatRoomID]).map(
               (element) => {
@@ -281,7 +271,7 @@ const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
             <></>
           )}
         </div>
-        <div className="replyMessagePreview hide">
+        <div className="replyMessagePreview ">
           {repliedMessage.message === null ? (
             <></>
           ) : (

@@ -5,7 +5,7 @@ import UserAvatar from '../UserAvatar/UserAvatar';
 import './ChatRoomBox.css';
 
 const ChatRoomBox = ({ chatRoomDetail }) => {
-  const { setSelectedChat } = useSelectedChat();
+  const { selectedChat, setSelectedChat } = useSelectedChat();
 
   async function openChatRoomMessages(e, chatRoomInfo) {
     // Array.from(
@@ -13,7 +13,8 @@ const ChatRoomBox = ({ chatRoomDetail }) => {
     // ).forEach((elem) => elem.classList.remove('selected'));
     e.currentTarget.classList.add('selected');
 
-    setSelectedChat({ ...chatRoomInfo });
+    if (selectedChat?.chatRoomID !== chatRoomInfo?.chatRoomID)
+      setSelectedChat({ ...chatRoomInfo });
   }
 
   return (

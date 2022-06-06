@@ -8,7 +8,7 @@ import { useSocket } from '../../context/SocketContext';
 const NewChatRoom = ({ chatRooms }) => {
   const [userList, setUserList] = useState([]);
   const { currentUser } = useAuth();
-  const { setSelectedChat } = useSelectedChat();
+  const { selectedChat, setSelectedChat } = useSelectedChat();
 
   const { socket } = useSocket();
 
@@ -33,7 +33,8 @@ const NewChatRoom = ({ chatRooms }) => {
     );
     if (chatRoom.length === 1) {
       const { firstName, lastName, photoUrl } = userInfo;
-      setSelectedChat({ ...chatRoom[0], firstName, lastName, photoUrl });
+      if (selectedChat?.email !== userInfo.email)
+        setSelectedChat({ ...chatRoom[0], firstName, lastName, photoUrl });
     }
     if (!chatRoom.length) {
       const { _id: selectedUserID, firstName, lastName, photoUrl } = userInfo;

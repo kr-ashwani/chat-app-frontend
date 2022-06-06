@@ -53,7 +53,7 @@ const ReplyMessage = ({ repliedMessage }) => {
       onClick={scrollBackToMessage}>
       <div className="replyUser">
         <UserAvatar imgSrc={repliedMessage.userPhotoUrl} size="20px" />
-        {messageOfUserItself ? (
+        {repliedMessage.userID === currentUser._id ? (
           <span>
             <p>You</p>
           </span>

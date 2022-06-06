@@ -312,17 +312,29 @@ const ChatInput = ({ chatRoomMessages, setChatRoomMessages }) => {
 
     setMessage('');
     messageDiv.current.innerText = '';
-    setRepliedMessage({
-      replied: false,
-      message: null,
-      messageType: '',
-      replierID: '',
-      messageThumbnail: '',
-      messageID: '',
-      userName: '',
-      userID: '',
-      userPhotoUrl: '',
-    });
+    //chatList scroll back to normal
+    const chatList = document.getElementsByClassName('chatList')[0];
+    const msgelem = document.getElementsByClassName('msgReplyPreview')[0];
+
+    if (msgelem && chatList) {
+      // chatList.scrollTop -= msgelem.clientHeight;
+      chatList.style.setProperty('height', '100%');
+      chatList.style.transform = `translateY(0)`;
+      msgelem.style.transform = 'translateY(0%)';
+    }
+    setTimeout(() => {
+      setRepliedMessage({
+        replied: false,
+        message: null,
+        messageType: '',
+        replierID: '',
+        messageThumbnail: '',
+        messageID: '',
+        userName: '',
+        userID: '',
+        userPhotoUrl: '',
+      });
+    }, 510);
     messageDiv.current.focus();
   }
 
@@ -397,6 +409,7 @@ const ChatInput = ({ chatRoomMessages, setChatRoomMessages }) => {
 
   useEffect(() => {
     if (!repliedMessage.replied) return;
+    if (!selectedChat?.chatRoomID) return;
 
     const message =
       chatRoomMessages[selectedChat.chatRoomID][repliedMessage.messageID];
