@@ -195,6 +195,7 @@ const ChatInput = ({ chatRoomMessages, setChatRoomMessages }) => {
           sent: false,
           delivered: false,
         },
+        repliedMessage,
       };
 
       socket.emit('chatRoom:create', {
