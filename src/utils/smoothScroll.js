@@ -159,4 +159,5 @@ export {
   smoothScrollToBottom,
   smoothScrollToTop,
   smoothScrollToId,
+  smoothScrollToElement,
 };

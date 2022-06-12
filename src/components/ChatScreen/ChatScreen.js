@@ -213,7 +213,7 @@ const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
         userID: '',
         userPhotoUrl: '',
       });
-    }, 510);
+    }, 290);
   }
   useEffect(() => {
     if (prevMsg.current === null && repliedMessage.message) {
@@ -225,7 +225,7 @@ const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
       setTimeout(() => {
         chatList.style.setProperty('height', `calc(100% - ${contentHeight}px)`);
         chatList.scrollTop += contentHeight;
-      }, 500);
+      }, 300);
 
       chatList.style.transform = `translateY(${-1 * contentHeight}px)`;
       msgelem.style.transform = 'translateY(-100%)';

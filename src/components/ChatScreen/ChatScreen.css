@@ -10,7 +10,7 @@
   scrollbar-color: #373f44;
   position: relative;
   transform: translateY(0);
-  transition: transform 500ms cubic-bezier(0.1, 0.82, 0.25, 1);
+  transition: transform 300ms cubic-bezier(0.1, 0.82, 0.25, 1);
 }
 
 .chatList::-webkit-scrollbar {
@@ -44,7 +44,7 @@
 .msgReplyPreview {
   background-color: #202c33;
   transform: translateY(0);
-  transition: transform 500ms cubic-bezier(0.1, 0.82, 0.25, 1);
+  transition: transform 300ms cubic-bezier(0.1, 0.82, 0.25, 1);
   width: 100%;
   position: absolute;
   top: 0;
