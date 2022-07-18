@@ -17,6 +17,9 @@
   background-color: #202c33;
   background-color: #303135b3;
 }
+.chatRoomBox.selected:hover {
+  background-color: #303135;
+}
 .addChatRoom {
   color: #1d90f5;
   font-weight: 500;
