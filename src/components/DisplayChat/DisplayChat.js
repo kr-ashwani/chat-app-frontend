@@ -76,7 +76,7 @@ const DisplayChat = () => {
       <div className="welcomeScreen">
         <div className="logo">
           <img src={chattingImg} alt="chatx logo" />
-          <h2>Chatx</h2>
+          <h2>Message Bits</h2>
           <p>Realtime chat app for web</p>
         </div>
       </div>
