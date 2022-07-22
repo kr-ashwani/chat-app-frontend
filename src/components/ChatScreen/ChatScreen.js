@@ -4,12 +4,17 @@ import useSelectedChat from '../../hooks/useSelectedChat';
 import { useSocket } from '../../context/SocketContext';
 import TextMessage from '../TextMessage/TextMessage';
 import { useAuth } from '../../context/AuthContext';
+import useReply from '../../hooks/useReply';
+import UserAvatar from '../UserAvatar/UserAvatar';
 
 const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
   const { selectedChat } = useSelectedChat();
   const { socket } = useSocket();
   const { currentUser } = useAuth();
   const scrollMsg = useRef(0);
+  const prevMsg = useRef(null);
+
+  const { repliedMessage, setRepliedMessage } = useReply();
 
   useEffect(() => {
     console.log('selectedChat : ', selectedChat);
@@ -53,13 +58,12 @@ const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
   }, [selectedChat]);
 
   // socket realtime new message
+
   useEffect(() => {
     function newMessage({ newMsg, lastMsg }) {
       setChatRoomMessages((prev) => {
         const prevMsgs = prev[newMsg?.chatRoomID];
-        console.log('previous msg', prevMsgs);
-        console.log('last msg', lastMsg);
-        if (prevMsgs && prevMsgs[lastMsg.messageID]?.showUserInfo)
+        if (prevMsgs && lastMsg && prevMsgs[lastMsg.messageID]?.showUserInfo)
           prevMsgs[lastMsg.messageID].showUserInfo = lastMsg.showUserInfo;
 
         if (newMsg.senderID === currentUser._id) scrollMsg.current = 1;
@@ -94,7 +98,7 @@ const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
         }, 100);
 
       if (currentUser._id !== newMsg.senderID)
-        if (selectedChat.chatRoomID === newMsg.chatRoomID)
+        if (selectedChat?.chatRoomID === newMsg.chatRoomID)
           setTimeout(() => {
             socket.emit('message:seen', {
               messageID: newMsg.messageID,
@@ -189,11 +193,74 @@ const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
         .classList.add('selected');
   }, [selectedChat]);
 
+  function noReply() {
+    const chatList = document.getElementsByClassName('chatList')[0];
+    const msgelem = document.getElementsByClassName('msgReplyPreview')[0];
+
+    chatList.scrollTop -= msgelem.clientHeight;
+    chatList.style.setProperty('height', '100%');
+    chatList.style.transform = `translateY(0)`;
+    msgelem.style.transform = 'translateY(0%)';
+    setTimeout(() => {
+      setRepliedMessage({
+        replied: false,
+        message: null,
+        replierID: '',
+        messageType: '',
+        messageThumbnail: '',
+        messageID: '',
+        userName: '',
+        userID: '',
+        userPhotoUrl: '',
+      });
+    }, 290);
+  }
+  useEffect(() => {
+    if (prevMsg.current === null && repliedMessage.message) {
+      document.getElementsByClassName('inputMessage')[0].focus();
+      const chatList = document.getElementsByClassName('chatList')[0];
+      const msgelem = document.getElementsByClassName('msgReplyPreview')[0];
+      const contentHeight = msgelem.clientHeight;
+
+      setTimeout(() => {
+        chatList.style.setProperty('height', `calc(100% - ${contentHeight}px)`);
+        chatList.scrollTop += contentHeight;
+      }, 300);
+
+      chatList.style.transform = `translateY(${-1 * contentHeight}px)`;
+      msgelem.style.transform = 'translateY(-100%)';
+    }
+    prevMsg.current = repliedMessage.message;
+  }, [repliedMessage.messageID, repliedMessage.message]);
+
+  useEffect(() => {
+    const chatList = document.getElementsByClassName('chatList')[0];
+    const msgelem = document.getElementsByClassName('msgReplyPreview')[0];
+
+    if (msgelem && chatList) {
+      chatList.scrollTop -= msgelem.clientHeight;
+      chatList.style.setProperty('height', '100%');
+      chatList.style.transform = `translateY(0)`;
+      msgelem.style.transform = 'translateY(0%)';
+    }
+    setRepliedMessage({
+      replied: false,
+      message: null,
+      messageType: '',
+      replierID: '',
+      messageThumbnail: '',
+      messageID: '',
+      userName: '',
+      userID: '',
+      userPhotoUrl: '',
+    });
+  }, [selectedChat, setRepliedMessage]);
+
   return (
     <>
       <div className="viewChat">
-        <div className="initialSpace"></div>
         <div className="chatList">
+          <div className="initialSpace"></div>
           {chatRoomMessages[selectedChat?.chatRoomID] ? (
             Object.entries(chatRoomMessages[selectedChat.chatRoomID]).map(
               (element) => {
@@ -202,6 +269,39 @@ const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
             )
           ) : (
             <></>
+          )}
+        </div>
+        <div className="replyMessagePreview ">
+          {repliedMessage.message === null ? (
+            <></>
+          ) : (
+            <div className="msgReplyPreview">
+              <div className="msgPreview">
+                <span>
+                  <UserAvatar
+                    imgSrc={repliedMessage.userPhotoUrl}
+                    size="25px"
+                  />
+                  <p>
+                    {currentUser._id === repliedMessage.userID
+                      ? 'You'
+                      : repliedMessage.userName}
+                  </p>
+                </span>
+                <span className="repMsg">
+                  <p>{repliedMessage.message}</p>
+                </span>
+              </div>
+              <div className="closeReply" onClick={noReply}>
+                <svg
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24">
+                  <path d="m19.1 17.2-5.3-5.3 5.3-5.3-1.8-1.8-5.3 5.4-5.3-5.3-1.8 1.7 5.3 5.3-5.3 5.3L6.7 19l5.3-5.3 5.3 5.3 1.8-1.8z"></path>
+                </svg>
+              </div>
+            </div>
           )}
         </div>
       </div>

@@ -20,22 +20,33 @@
 .messageCover {
   display: flex;
   flex-direction: column;
+  user-select: none;
+}
+.messageCover * {
+  user-select: text;
 }
 
 .msgText {
   font-size: 0.9rem;
   /* background-color: #1d90f5; */
   margin-bottom: 5px;
-  padding: 10px 15px;
+  /* padding: 10px 15px; */
   background-color: #424656;
   border-radius: 20px 20px 20px 6px / 20px 20px 20px 6px;
   word-wrap: break-word;
   white-space: pre-wrap;
   position: relative;
+  transition: filter 500ms ease-in-out;
 }
-.msgText.userMessage {
+.msgText.userMessage.highlight {
+  filter: brightness(1.2);
+}
+.msgText.highlight {
+  filter: brightness(1.6);
+}
+/* .msgText.userMessage {
   padding: 10px 10px 10px 15px;
-}
+} */
 
 .msgSenderInfo {
   font-size: 0.75rem;
@@ -62,11 +73,23 @@
   background-color: #1d90f5;
 }
 
+.msg {
+  padding: 10px 15px 10px;
+}
+.msgText.userMessage .msg {
+  padding: 10px 10px 10px 15px;
+}
+
 .extraInfo {
   align-self: center;
-  color: #79797c;
-  font-size: 0.85rem;
   margin: 15px 0;
+
+  color: #8696a0;
+  font-size: 0.9rem;
+  padding: 2px 15px 5px;
+  border-radius: 20px;
+  background-color: #202c33;
+  box-shadow: 0 1px 0.5px rgba(var(--shadow-rgb), 0.13);
 }
 
 .msgStatus {
@@ -98,6 +121,6 @@
     font-size: 1rem;
   }
   .extraInfo {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
   }
 }

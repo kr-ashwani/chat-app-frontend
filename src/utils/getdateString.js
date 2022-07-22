@@ -1,19 +1,28 @@
 import dateFormat from 'dateformat';
 
-const getDateString = (givenTimestamp) => {
+const getDateString = (givenTimestamp, viewChat) => {
   givenTimestamp = new Date(givenTimestamp);
-  const currentTimestamp = new Date().getTime();
+  const currentTimestamp = new Date();
 
   const daysDiff =
-    (currentTimestamp - givenTimestamp.getTime()) / (24 * 60 * 60 * 1000);
-  let dateString = null;
+    (currentTimestamp.getTime() - givenTimestamp.getTime()) /
+    (24 * 60 * 60 * 1000);
 
-  if (daysDiff <= 1) dateString = 'today';
-  else if (daysDiff <= 2) dateString = 'yesterday';
-  else if (daysDiff <= 7) dateString = dateFormat(givenTimestamp, 'dddd');
-  else dateString = dateFormat(givenTimestamp, 'mm/dd/yyyy');
-
-  return dateString;
+  if (daysDiff <= 1)
+    return currentTimestamp.getDay() - givenTimestamp.getDay() === 0
+      ? viewChat
+        ? 'Today'
+        : dateFormat(givenTimestamp, 'h:MM TT')
+      : 'Yesterday';
+  else if (daysDiff <= 2)
+    return currentTimestamp.getDay() - givenTimestamp.getDay() === 1
+      ? 'Yesterday'
+      : dateFormat(givenTimestamp, 'dddd');
+  else if (daysDiff <= 7)
+    return currentTimestamp.getDay() - givenTimestamp.getDay() !== 0
+      ? dateFormat(givenTimestamp, 'dddd')
+      : dateFormat(givenTimestamp, 'dd/mm/yyyy');
+  else return dateFormat(givenTimestamp, 'dd/mm/yyyy');
 };
 
-export default getDateString;
+export { getDateString };

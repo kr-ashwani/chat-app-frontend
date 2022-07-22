@@ -37,9 +37,7 @@ const Header = () => {
     <nav>
       <div className="navbar">
         <h1>
-          <Link to="/">Chatx</Link>
-          &nbsp; &nbsp;
-          {currentUser?.firstName}
+          <Link to="/">Msg Bits</Link>
         </h1>
         <ul>
           <li>

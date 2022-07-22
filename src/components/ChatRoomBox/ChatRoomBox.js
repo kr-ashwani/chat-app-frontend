@@ -1,11 +1,11 @@
 import React from 'react';
 import useSelectedChat from '../../hooks/useSelectedChat';
-import getDateString from '../../utils/getdateString';
+import { getDateString } from '../../utils/getdateString';
 import UserAvatar from '../UserAvatar/UserAvatar';
 import './ChatRoomBox.css';
 
 const ChatRoomBox = ({ chatRoomDetail }) => {
-  const { setSelectedChat } = useSelectedChat();
+  const { selectedChat, setSelectedChat } = useSelectedChat();
 
   async function openChatRoomMessages(e, chatRoomInfo) {
     // Array.from(
@@ -13,7 +13,8 @@ const ChatRoomBox = ({ chatRoomDetail }) => {
     // ).forEach((elem) => elem.classList.remove('selected'));
     e.currentTarget.classList.add('selected');
 
-    setSelectedChat({ ...chatRoomInfo });
+    if (selectedChat?.chatRoomID !== chatRoomInfo?.chatRoomID)
+      setSelectedChat({ ...chatRoomInfo });
   }
 
   return (
@@ -25,7 +26,9 @@ const ChatRoomBox = ({ chatRoomDetail }) => {
       </div>
       <div className="chatRoomDetail">
         <div className="chatRoomName">
-          <h4>{chatRoomDetail.firstName + ' ' + chatRoomDetail.lastName}</h4>
+          <span>
+            {chatRoomDetail.firstName + ' ' + chatRoomDetail.lastName}
+          </span>
           <span>{getDateString(chatRoomDetail.lastMessageTimestamp)}</span>
         </div>
         <div className="chatRoomMsg">
