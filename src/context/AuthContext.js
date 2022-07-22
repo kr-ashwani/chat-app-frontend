@@ -35,9 +35,6 @@ function AuthProvider({ children }) {
         `${process.env.REACT_APP_SERVER_ENDPOINT}/auth/refresh`,
         {
           credentials: 'include',
-          headers: {
-            'x-tokenReqTime': Date.now(),
-          },
         }
       );
       if (!res.ok) return;
