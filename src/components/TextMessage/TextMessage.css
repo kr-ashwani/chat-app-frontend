@@ -18,6 +18,7 @@
   align-self: flex-end;
 }
 .messageCover {
+  position: relative;
   display: flex;
   flex-direction: column;
   user-select: none;
@@ -116,6 +117,17 @@
   color: #22f3fe;
 }
 
+.fa-reply {
+  position: absolute;
+  top: 20px;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 150ms ease-in-out;
+}
+.fa-reply.show {
+  transform: translateX(0);
+  opacity: 1;
+}
 @media only screen and (max-width: 700px) {
   .msgText {
     font-size: 1rem;

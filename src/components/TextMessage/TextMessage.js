@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { getDateString } from '../../utils/getdateString';
 
 import UserAvatar from '../UserAvatar/UserAvatar';
@@ -9,6 +9,7 @@ import ReplyMessage from '../ReplyMessage/ReplyMessage';
 import useReply from '../../hooks/useReply';
 import useMessage from './../../hooks/useChatRoomMessage';
 import useSelectedChat from './../../hooks/useSelectedChat';
+import { useEffect } from 'react';
 
 const TextMessage = ({ message }) => {
   const { currentUser } = useAuth();
@@ -27,10 +28,21 @@ const TextMessage = ({ message }) => {
   const { repliedMessage, setRepliedMessage } = useReply();
   const { chatRoomMessages } = useMessage();
   const { selectedChat } = useSelectedChat();
+  const msgDiv = useRef();
+  const replyDiv = useRef();
+  const touchSelect = useRef(true);
 
-  function replyToMessage(e) {
-    if (e.target !== e.currentTarget) return;
-    if (repliedMessage.messageID !== e.target.dataset.messageId) {
+  function replyToMessage(e, id) {
+    if (e.target !== e.currentTarget) if (!id) return;
+    replyDiv.current.classList.add('show');
+
+    setTimeout(() => {
+      replyDiv.current.classList.remove('show');
+    }, 300);
+
+    let msgID = id || e.target.dataset.messageId;
+
+    if (repliedMessage.messageID !== msgID) {
       const {
         message,
         senderID,
@@ -39,7 +51,7 @@ const TextMessage = ({ message }) => {
         messageID,
         chatRoomID,
         senderPhotoUrl,
-      } = chatRoomMessages[selectedChat.chatRoomID][e.target.dataset.messageId];
+      } = chatRoomMessages[selectedChat.chatRoomID][msgID];
       setRepliedMessage((prev) => ({
         message,
         senderID,
@@ -49,18 +61,65 @@ const TextMessage = ({ message }) => {
         senderPhotoUrl,
         messageID,
       }));
+
+      navigator.vibrate(200);
     }
   }
+
+  useEffect(() => {
+    if (!msgDiv.current) return;
+    let x = 0;
+    msgDiv.current.addEventListener('touchstart', (e) => {
+      const touch = e.targetTouches[0];
+      x = touch.clientX;
+    });
+
+    msgDiv.current.addEventListener('touchend', (e) => {
+      const touch = e.changedTouches[0];
+      touchSelect.current = true;
+      msgDiv.current.style.transition = `transform 300ms ease-in-out`;
+      setTimeout(() => {
+        msgDiv.current.style.transform = `translate3d(${0}px,0,0)`;
+      }, 10);
+
+      setTimeout(() => {
+        msgDiv.current.style.transition = ``;
+      }, 300);
+
+      x = touch.clientX;
+    });
+    msgDiv.current.addEventListener('touchmove', (e) => {
+      const touch = e.targetTouches[0];
+      if (touch.clientX - x > 70) return;
+      if (touch.clientX - x > 45)
+        if (touchSelect.current) {
+          touchSelect.current = false;
+          let path = e.path || (e.composedPath && e.composedPath());
+          for (let i = 0; i < path.length; i++)
+            if (path[i].classList.contains('messageCover')) {
+              setTimeout(() => {
+                replyToMessage(e, path[i].dataset.messageId);
+              }, 100);
+              break;
+            }
+        }
+      if (touch.clientX - x > 20)
+        msgDiv.current.style.transform = `translate3d(${
+          touch.clientX - x
+        }px,0,0)`;
+    });
+  }, []);
 
   return !extraInfo ? (
     <div
       className={`messageCover`}
       data-message-id={`${message.messageID}`}
       onDoubleClick={(e) => replyToMessage(e)}>
+      <i ref={replyDiv} className="fas fa-reply"></i>
       <div
         className={`messageBox ${userMessageClass}`}
         id={`${message.messageID}`}>
-        <div className={`msgText ${userMessageClass}`}>
+        <div ref={msgDiv} className={`msgText ${userMessageClass}`}>
           {message.repliedMessage ? (
             <ReplyMessage repliedMessage={message.repliedMessage} />
           ) : (

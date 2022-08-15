@@ -7,6 +7,7 @@
   height: 72px;
   position: absolute;
   width: 100%;
+  padding: 0 8px;
   background-color: #1d1b1b;
   transition: background-color 60ms ease-in-out;
 }

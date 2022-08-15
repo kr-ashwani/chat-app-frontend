@@ -59,6 +59,7 @@
   padding: 4px 30px;
   background-color: #595757;
   color: #fff;
+  height: 1.8rem;
   border: 0;
 }
 .newChatRoomDetail input:focus,
@@ -91,6 +92,7 @@
 }
 .userList > * {
   cursor: pointer;
+  padding-right: 10px;
 }
 .userList > * :hover {
   filter: brightness(85%);

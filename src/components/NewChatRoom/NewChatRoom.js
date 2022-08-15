@@ -10,6 +10,10 @@ const NewChatRoom = ({ chatRooms }) => {
   const { currentUser } = useAuth();
   const { selectedChat, setSelectedChat } = useSelectedChat();
 
+  const [searchUser, setSearchUser] = useState('');
+
+  const [filteredUserList, setFilteredUserList] = useState([]);
+
   const { socket } = useSocket();
 
   useEffect(() => {
@@ -47,6 +51,14 @@ const NewChatRoom = ({ chatRooms }) => {
     }
   }
 
+  useEffect(() => {
+    setFilteredUserList(
+      userList.filter((elem) =>
+        (elem.firstName + ' ' + elem.lastName).includes(searchUser)
+      )
+    );
+  }, [searchUser, userList]);
+
   return (
     <div className="newChatRoom">
       <div className="newChatRoomDetail">
@@ -65,10 +77,15 @@ const NewChatRoom = ({ chatRooms }) => {
         </div>
         <div className="userSearch">
           <i className="fa-solid fa-magnifying-glass"></i>
-          <input type="text" placeholder="Search" />
+          <input
+            type="text"
+            placeholder="Search Users"
+            value={searchUser}
+            onChange={(e) => setSearchUser(e.target.value)}
+          />
         </div>
         <div className="userList">
-          {userList.map((elm, id) => (
+          {filteredUserList.map((elm, id) => (
             <div key={id} onClick={() => newMessage(elm)}>
               {<UserAvatar imgSrc={elm.photoUrl} size="40px" />}
               <p>{elm.firstName + ' ' + elm.lastName}</p>
