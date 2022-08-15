@@ -7,6 +7,8 @@ import { useAuth } from '../../context/AuthContext';
 import dateFormat from 'dateformat';
 import ReplyMessage from '../ReplyMessage/ReplyMessage';
 import useReply from '../../hooks/useReply';
+import useMessage from './../../hooks/useChatRoomMessage';
+import useSelectedChat from './../../hooks/useSelectedChat';
 
 const TextMessage = ({ message }) => {
   const { currentUser } = useAuth();
@@ -23,15 +25,31 @@ const TextMessage = ({ message }) => {
     : 'pending';
 
   const { repliedMessage, setRepliedMessage } = useReply();
+  const { chatRoomMessages } = useMessage();
+  const { selectedChat } = useSelectedChat();
 
   function replyToMessage(e) {
     if (e.target !== e.currentTarget) return;
-    if (repliedMessage.messageID !== e.target.dataset.messageId)
+    if (repliedMessage.messageID !== e.target.dataset.messageId) {
+      const {
+        message,
+        senderID,
+        messageType,
+        senderName,
+        messageID,
+        chatRoomID,
+        senderPhotoUrl,
+      } = chatRoomMessages[selectedChat.chatRoomID][e.target.dataset.messageId];
       setRepliedMessage((prev) => ({
-        ...prev,
-        replied: true,
-        messageID: e.target.dataset.messageId,
+        message,
+        senderID,
+        messageType,
+        senderName,
+        chatRoomID,
+        senderPhotoUrl,
+        messageID,
       }));
+    }
   }
 
   return !extraInfo ? (
@@ -43,8 +61,8 @@ const TextMessage = ({ message }) => {
         className={`messageBox ${userMessageClass}`}
         id={`${message.messageID}`}>
         <div className={`msgText ${userMessageClass}`}>
-          {message?.repliedMessage?.replied ? (
-            <ReplyMessage repliedMessage={message?.repliedMessage} />
+          {message.repliedMessage ? (
+            <ReplyMessage repliedMessage={message.repliedMessage} />
           ) : (
             <></>
           )}

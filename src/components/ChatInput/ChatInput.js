@@ -6,8 +6,9 @@ import useSelectedChat from '../../hooks/useSelectedChat';
 import './ChatInput.css';
 import { v4 as uuid } from 'uuid';
 import useReply from '../../hooks/useReply';
+import useMessage from './../../hooks/useChatRoomMessage';
 
-const ChatInput = ({ chatRoomMessages, setChatRoomMessages }) => {
+const ChatInput = () => {
   const { currentUser } = useAuth();
   const [message, setMessage] = useState('');
   const emojiPicker = useRef();
@@ -16,6 +17,7 @@ const ChatInput = ({ chatRoomMessages, setChatRoomMessages }) => {
   // const [chatRoomTypingMessage, setChatRoomTypingMessage] = useState([]);
   const pendingMsg = useRef({});
   const pendingChatRoom = useRef([]);
+  const { chatRoomMessages, setChatRoomMessages } = useMessage();
 
   const { selectedChat, setSelectedChat } = useSelectedChat();
   const { socket } = useSocket();
@@ -129,7 +131,8 @@ const ChatInput = ({ chatRoomMessages, setChatRoomMessages }) => {
         sent: false,
         delivered: false,
       },
-      repliedMessage,
+      repliedMessageID: repliedMessage.messageID,
+      repliedMessage: repliedMessage.messageID && repliedMessage,
     };
 
     if (selectedChat.chatRoomID) {
@@ -162,13 +165,16 @@ const ChatInput = ({ chatRoomMessages, setChatRoomMessages }) => {
             sent: false,
             delivered: false,
           },
-          repliedMessage,
+          repliedMessageID: null,
         };
       if (!pendingMsg.current[selectedChat.chatRoomID])
         pendingMsg.current[selectedChat.chatRoomID] = [];
 
-      if (check) pendingMsg.current[selectedChat.chatRoomID].push(msgInfoTime);
-      else pendingMsg.current[selectedChat.chatRoomID].push(messageData);
+      //change i made
+      if (check) {
+        pendingMsg.current[selectedChat.chatRoomID].push(msgInfoTime);
+        pendingMsg.current[selectedChat.chatRoomID].push(messageData);
+      } else pendingMsg.current[selectedChat.chatRoomID].push(messageData);
 
       if (socket.connected)
         if (pendingMsg.current[selectedChat.chatRoomID].length === 1) {
@@ -176,8 +182,6 @@ const ChatInput = ({ chatRoomMessages, setChatRoomMessages }) => {
             messageData: pendingMsg.current[selectedChat.chatRoomID][0],
           });
         }
-
-      if (check) pendingMsg.current[selectedChat.chatRoomID].push(messageData);
     } else {
       msgInfoTime = {
         senderID: currentUser._id,
@@ -195,7 +199,7 @@ const ChatInput = ({ chatRoomMessages, setChatRoomMessages }) => {
           sent: false,
           delivered: false,
         },
-        repliedMessage,
+        repliedMessageID: null,
       };
 
       socket.emit('chatRoom:create', {
@@ -326,15 +330,13 @@ const ChatInput = ({ chatRoomMessages, setChatRoomMessages }) => {
     }
     setTimeout(() => {
       setRepliedMessage({
-        replied: false,
-        message: null,
+        message: '',
+        senderID: '',
         messageType: '',
-        replierID: '',
-        messageThumbnail: '',
-        messageID: '',
-        userName: '',
-        userID: '',
-        userPhotoUrl: '',
+        messageID: null,
+        chatRoomID: null,
+        senderName: '',
+        senderPhotoUrl: '',
       });
     }, 510);
     messageDiv.current.focus();
@@ -408,34 +410,6 @@ const ChatInput = ({ chatRoomMessages, setChatRoomMessages }) => {
     chatList.scrollTop = chatList.scrollHeight;
     chatList.style.scrollBehavior = 'auto';
   }, [message]);
-
-  useEffect(() => {
-    if (!repliedMessage.replied) return;
-    if (!selectedChat?.chatRoomID) return;
-
-    const message =
-      chatRoomMessages[selectedChat.chatRoomID][repliedMessage.messageID];
-
-    if (!message) return;
-    setRepliedMessage({
-      replied: true,
-      replierID: currentUser._id,
-      message: message.message,
-      messageType: message.messageType,
-      messageThumbnail: message.messageThubnail,
-      messageID: message.messageID,
-      userName: message.senderName,
-      userID: message.senderID,
-      userPhotoUrl: message.senderPhotoUrl,
-    });
-  }, [
-    chatRoomMessages,
-    repliedMessage.replied,
-    setRepliedMessage,
-    selectedChat,
-    repliedMessage.messageID,
-    currentUser,
-  ]);
 
   return (
     <div className="chatInput">

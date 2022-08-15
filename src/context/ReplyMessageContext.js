@@ -4,15 +4,13 @@ const ReplyMessageContext = React.createContext();
 
 function ReplyMessageProvider({ children }) {
   const [repliedMessage, setRepliedMessage] = useState({
-    replied: false,
-    message: null,
-    replierID: '',
+    message: '',
+    senderID: '',
     messageType: '',
-    messageThumbnail: '',
-    messageID: '',
-    userName: '',
-    userID: '',
-    userPhotoUrl: '',
+    messageID: null,
+    chatRoomID: null,
+    senderName: '',
+    senderPhotoUrl: '',
   });
 
   const value = {

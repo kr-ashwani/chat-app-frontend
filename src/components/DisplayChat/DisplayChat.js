@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import 'emoji-picker-element';
 import './DisplayChat.css';
 import ChatInput from '../ChatInput/ChatInput';
@@ -9,10 +9,11 @@ import { useSocket } from '../../context/SocketContext';
 import useChatRoom from '../../hooks/useChatRoom';
 import { useAuth } from '../../context/AuthContext';
 import chattingImg from '../../assets/chatting.svg';
+import useMessage from './../../hooks/useChatRoomMessage';
 
 const DisplayChat = () => {
   const { selectedChat, setSelectedChat } = useSelectedChat();
-  const [chatRoomMessages, setChatRoomMessages] = useState({});
+  const { setChatRoomMessages } = useMessage();
 
   const { currentUser } = useAuth();
   const { setChatRooms } = useChatRoom();
@@ -37,7 +38,7 @@ const DisplayChat = () => {
     socket.on('chatRoom:list', getChatList);
 
     return () => socket.off('chatRoom:list', getChatList);
-  }, [currentUser, socket, setChatRooms]);
+  }, [currentUser, socket, setChatRooms, setChatRoomMessages]);
 
   useEffect(() => {
     function getChatRoomMessages(payload) {
@@ -62,7 +63,7 @@ const DisplayChat = () => {
     }
     socket.on('message:list', getChatRoomMessages);
     return () => socket.off('message:list', getChatRoomMessages);
-  }, [socket, currentUser]);
+  }, [socket, currentUser, setChatRoomMessages]);
 
   useEffect(() => {
     if (selectedChat) {
@@ -102,14 +103,8 @@ const DisplayChat = () => {
             : '😍'}
         </h3>
       </div>
-      <ChatScreen
-        setChatRoomMessages={setChatRoomMessages}
-        chatRoomMessages={chatRoomMessages}
-      />
-      <ChatInput
-        chatRoomMessages={chatRoomMessages}
-        setChatRoomMessages={setChatRoomMessages}
-      />
+      <ChatScreen />
+      <ChatInput />
     </div>
   );
 };

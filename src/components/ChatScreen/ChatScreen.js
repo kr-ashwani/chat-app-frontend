@@ -6,13 +6,15 @@ import TextMessage from '../TextMessage/TextMessage';
 import { useAuth } from '../../context/AuthContext';
 import useReply from '../../hooks/useReply';
 import UserAvatar from '../UserAvatar/UserAvatar';
+import useMessage from './../../hooks/useChatRoomMessage';
 
-const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
+const ChatScreen = () => {
   const { selectedChat } = useSelectedChat();
   const { socket } = useSocket();
   const { currentUser } = useAuth();
   const scrollMsg = useRef(0);
-  const prevMsg = useRef(null);
+  // const prevMsg = useRef(null);
+  const { chatRoomMessages, setChatRoomMessages } = useMessage();
 
   const { repliedMessage, setRepliedMessage } = useReply();
 
@@ -21,13 +23,6 @@ const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
     if (selectedChat)
       document.getElementsByClassName('welcomeScreen')[0].classList.add('hide');
   }, [selectedChat]);
-
-  // useEffect(() => {
-  //   const chatList = document.getElementsByClassName('chatList')[0];
-  //   chatList.style.scrollBehavior = 'smooth';
-  //   chatList.scrollTop = chatList.scrollHeight;
-  //   chatList.style.scrollBehavior = 'auto';
-  // }, [chatRoomMessages]);
 
   function iOS() {
     return (
@@ -203,20 +198,18 @@ const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
     msgelem.style.transform = 'translateY(0%)';
     setTimeout(() => {
       setRepliedMessage({
-        replied: false,
-        message: null,
-        replierID: '',
+        message: '',
+        senderID: '',
         messageType: '',
-        messageThumbnail: '',
-        messageID: '',
-        userName: '',
-        userID: '',
-        userPhotoUrl: '',
+        messageID: null,
+        chatRoomID: null,
+        senderName: '',
+        senderPhotoUrl: '',
       });
     }, 290);
   }
   useEffect(() => {
-    if (prevMsg.current === null && repliedMessage.message) {
+    if (repliedMessage.message) {
       document.getElementsByClassName('inputMessage')[0].focus();
       const chatList = document.getElementsByClassName('chatList')[0];
       const msgelem = document.getElementsByClassName('msgReplyPreview')[0];
@@ -230,7 +223,6 @@ const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
       chatList.style.transform = `translateY(${-1 * contentHeight}px)`;
       msgelem.style.transform = 'translateY(-100%)';
     }
-    prevMsg.current = repliedMessage.message;
   }, [repliedMessage.messageID, repliedMessage.message]);
 
   useEffect(() => {
@@ -244,15 +236,13 @@ const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
       msgelem.style.transform = 'translateY(0%)';
     }
     setRepliedMessage({
-      replied: false,
-      message: null,
+      message: '',
+      senderID: '',
       messageType: '',
-      replierID: '',
-      messageThumbnail: '',
-      messageID: '',
-      userName: '',
-      userID: '',
-      userPhotoUrl: '',
+      messageID: null,
+      chatRoomID: null,
+      senderName: '',
+      senderPhotoUrl: '',
     });
   }, [selectedChat, setRepliedMessage]);
 
@@ -272,20 +262,20 @@ const ChatScreen = ({ chatRoomMessages, setChatRoomMessages }) => {
           )}
         </div>
         <div className="replyMessagePreview ">
-          {repliedMessage.message === null ? (
+          {!repliedMessage.message ? (
             <></>
           ) : (
             <div className="msgReplyPreview">
               <div className="msgPreview">
                 <span>
                   <UserAvatar
-                    imgSrc={repliedMessage.userPhotoUrl}
+                    imgSrc={repliedMessage.senderPhotoUrl}
                     size="25px"
                   />
                   <p>
-                    {currentUser._id === repliedMessage.userID
+                    {currentUser._id === repliedMessage.senderID
                       ? 'You'
-                      : repliedMessage.userName}
+                      : repliedMessage.senderName}
                   </p>
                 </span>
                 <span className="repMsg">

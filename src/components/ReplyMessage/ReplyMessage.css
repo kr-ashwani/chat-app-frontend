@@ -8,7 +8,7 @@
   padding: 10px;
   border-radius: 15px;
 }
-.reply.userMessage {
+.msgText.userMessage .reply {
   background-color: #1960a4;
 }
 .replyUser {

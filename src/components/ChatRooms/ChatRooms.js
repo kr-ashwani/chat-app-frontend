@@ -12,18 +12,14 @@ const ChatGroup = () => {
   const { chatRooms, setChatRooms } = useChatRoom();
   const { currentUser, setUser } = useAuth();
   const loading = useRef(false);
-  const mounted = useRef(0);
+  const socketStatus = useRef('');
 
   const { socket } = useSocket();
 
   let container = useRef();
 
-  useEffect(() => {
-    if (currentUser) mounted.current = 1;
-  }, [currentUser, socket]);
-
   socket.on('disconnect', () => {
-    mounted.current = 5;
+    socketStatus.current = 'socketDisconnected';
   });
 
   useEffect(() => {
@@ -89,9 +85,10 @@ const ChatGroup = () => {
 
   useEffect(() => {
     function sendMessageSync() {
-      if (mounted.current === 5) socket.emit('chatRoom:list', currentUser._id);
+      if (socketStatus.current === 'socketDisconnected')
+        socket.emit('chatRoom:list', currentUser._id);
       // socket.emit('message:sync', 'socket reconnected');
-      mounted.current = 1;
+      socketStatus.current = '';
     }
     socket.on('message:sync', sendMessageSync);
     return () => socket.off('message:sync', sendMessageSync);

@@ -11,6 +11,7 @@ import { SelectedChatProvider } from './context/SelectedChatContext';
 import { SocketProvider } from './context/SocketContext';
 import { ChatRoomProvider } from './context/chatRoomContext';
 import AppLoading from './components/AppLoading/AppLoading';
+import { ChatRoomMessageProvider } from './context/chatRoomMessageContext';
 
 function App() {
   return (
@@ -24,9 +25,11 @@ function App() {
             <PrivateRoute>
               <SocketProvider>
                 <ChatRoomProvider>
-                  <SelectedChatProvider>
-                    <Chat />
-                  </SelectedChatProvider>
+                  <ChatRoomMessageProvider>
+                    <SelectedChatProvider>
+                      <Chat />
+                    </SelectedChatProvider>
+                  </ChatRoomMessageProvider>
                 </ChatRoomProvider>
               </SocketProvider>
             </PrivateRoute>
