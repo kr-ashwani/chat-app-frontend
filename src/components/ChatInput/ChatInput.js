@@ -170,11 +170,8 @@ const ChatInput = () => {
       if (!pendingMsg.current[selectedChat.chatRoomID])
         pendingMsg.current[selectedChat.chatRoomID] = [];
 
-      //change i made
-      if (check) {
-        pendingMsg.current[selectedChat.chatRoomID].push(msgInfoTime);
-        pendingMsg.current[selectedChat.chatRoomID].push(messageData);
-      } else pendingMsg.current[selectedChat.chatRoomID].push(messageData);
+      if (check) pendingMsg.current[selectedChat.chatRoomID].push(msgInfoTime);
+      else pendingMsg.current[selectedChat.chatRoomID].push(messageData);
 
       if (socket.connected)
         if (pendingMsg.current[selectedChat.chatRoomID].length === 1) {
@@ -182,6 +179,8 @@ const ChatInput = () => {
             messageData: pendingMsg.current[selectedChat.chatRoomID][0],
           });
         }
+
+      if (check) pendingMsg.current[selectedChat.chatRoomID].push(messageData);
     } else {
       msgInfoTime = {
         senderID: currentUser._id,
