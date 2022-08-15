@@ -15,6 +15,7 @@ const ChatScreen = () => {
   const scrollMsg = useRef(0);
   // const prevMsg = useRef(null);
   const { chatRoomMessages, setChatRoomMessages } = useMessage();
+  const prevMsg = useRef('');
 
   const { repliedMessage, setRepliedMessage } = useReply();
 
@@ -209,7 +210,7 @@ const ChatScreen = () => {
     }, 290);
   }
   useEffect(() => {
-    if (repliedMessage.message) {
+    if (prevMsg.current === '' && repliedMessage.message) {
       document.getElementsByClassName('inputMessage')[0].focus();
       const chatList = document.getElementsByClassName('chatList')[0];
       const msgelem = document.getElementsByClassName('msgReplyPreview')[0];
@@ -223,6 +224,7 @@ const ChatScreen = () => {
       chatList.style.transform = `translateY(${-1 * contentHeight}px)`;
       msgelem.style.transform = 'translateY(-100%)';
     }
+    prevMsg.current = repliedMessage.message;
   }, [repliedMessage.messageID, repliedMessage.message]);
 
   useEffect(() => {
