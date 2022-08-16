@@ -83,6 +83,7 @@
 }
 .newChatRoomDetail .userList {
   overflow: auto;
+  padding-bottom: 10px;
 }
 
 .userList {
