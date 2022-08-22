@@ -54,7 +54,9 @@ const NewChatRoom = ({ chatRooms }) => {
   useEffect(() => {
     setFilteredUserList(
       userList.filter((elem) =>
-        (elem.firstName + ' ' + elem.lastName).includes(searchUser)
+        (elem.firstName + ' ' + elem.lastName)
+          .toLowerCase()
+          .includes(searchUser.toLowerCase())
       )
     );
   }, [searchUser, userList]);
@@ -73,7 +75,7 @@ const NewChatRoom = ({ chatRooms }) => {
             Cancel
           </div>
           <h2>Message</h2>
-          <div className="next">Next</div>
+          <div className="next hide">Next</div>
         </div>
         <div className="userSearch">
           <i className="fa-solid fa-magnifying-glass"></i>

@@ -1,4 +1,4 @@
-form h2 {
+.signupForm form h2 {
   text-align: center;
   font-size: 1.8rem;
   font-weight: 900;
@@ -13,7 +13,7 @@ form h2 {
   max-width: 440px;
   flex-grow: 1;
 }
-form {
+.signupForm form {
   display: flex;
   flex-direction: column;
   gap: 25px;
@@ -33,7 +33,7 @@ form {
   display: flex;
   gap: 10px;
 }
-input {
+.signupForm input {
   -webkit-appearance: none;
   padding: 9px 12px;
   border-radius: 5px;
@@ -42,7 +42,7 @@ input {
   font-size: 0.98rem;
   width: 100%;
 }
-input:focus {
+.signupForm input:focus {
   box-shadow: 0 0 1px 2px rgba(53, 248, 248, 0.719);
   -webkit-box-shadow: 0 0 1px 2px rgba(53, 248, 248, 0.719);
   outline: 0;
@@ -74,7 +74,7 @@ button {
 .btn:hover {
   filter: brightness(85%);
 }
-button:hover {
+.signupForm button:hover {
   filter: brightness(85%);
 }
 .error {

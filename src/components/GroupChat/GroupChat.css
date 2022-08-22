@@ -1,0 +1,126 @@
+.grp-include {
+  justify-self: flex-end;
+  margin-left: auto;
+  position: relative;
+}
+.groupChatDetail {
+  padding: 10px;
+  padding-top: 40px;
+}
+.groupChat {
+  overflow-y: auto;
+  -webkit-perspective: 1000;
+  -webkit-backface-visibility: hidden;
+}
+.grp-heading > p {
+  padding-top: 5px;
+  font-size: 0.8rem;
+}
+.next.hide {
+  color: #8c8c8e !important;
+}
+.grp-heading > h2 {
+  font-size: 1.5rem;
+  margin-top: -10px !important;
+}
+.grp-include-tick {
+  position: absolute;
+  top: -1px;
+  opacity: 0;
+  user-select: none;
+  fill: #fff;
+  transition: opacity 200ms ease-in-out;
+}
+.grp-user-info.selected .grp-include-tick {
+  opacity: 1;
+  user-select: initial;
+}
+.grp-include-circle {
+  position: absolute;
+  top: -12px;
+  right: 0px;
+  width: 23px;
+  height: 23px;
+  transform: scale(0.9);
+
+  border-radius: 50%;
+  border: 1.8px solid #afb7bc26;
+  transition: background-color 150ms ease-in-out;
+}
+.grp-user-info.selected .grp-include-circle {
+  background-color: #339ffc;
+}
+.grp-user-info {
+  border-bottom: 1px solid #afb7bc26;
+  display: flex;
+  align-items: baseline;
+  margin-bottom: -10px;
+  flex-grow: 1;
+  padding-bottom: 15px;
+}
+
+.userList.grp > div {
+  gap: 10px;
+}
+
+.grp-list {
+  margin-top: 10px;
+  height: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 5px;
+  position: relative;
+  flex-shrink: 0;
+  transition: height 300ms ease-in-out;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+.grp-user-cvr {
+  transform: scale(0);
+  transition: transform 300ms ease-in-out;
+}
+.grp-list::-webkit-scrollbar {
+  display: none;
+}
+.grp-list {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.grp-list.animateTranslate > * {
+  transition: transform 200ms ease-in-out;
+}
+
+.grp-list.selected {
+  height: 90px;
+}
+.grp-list-user {
+  position: absolute;
+}
+.grp-list-user p {
+  text-align: center;
+  font-size: 0.85rem;
+  padding-top: 5px;
+}
+.userList.grp {
+  margin-top: -8px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+.grp-unselect {
+  cursor: pointer;
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(0.7);
+  border-radius: 50%;
+  background-color: #8c8c8e;
+  color: #f6f6f6;
+  fill: #f6f6f6;
+}

@@ -1,11 +1,34 @@
 .userAvatar {
+  position: relative;
   overflow: hidden;
   border-radius: 50%;
 }
 .userAvatar > img {
   border-radius: 50%;
-  width: 100%;
-  height: auto;
+  /* width: 100%; */
+  /* height: auto; */
   object-fit: cover;
   object-position: center center;
+}
+.changeAvatar {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #1e2a31cc;
+  background-color: rgba(30, 42, 49, 0.8);
+  color: rgba(233, 237, 239, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 40px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  gap: 5px;
+  flex-direction: column;
+  transition: opacity 200ms ease-in-out;
+  opacity: 0;
+}
+.changeAvatar:hover {
+  opacity: 1;
 }

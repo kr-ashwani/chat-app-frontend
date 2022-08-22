@@ -1,0 +1,127 @@
+.animatedInput input {
+  padding-right: 15px !important;
+  font-size: 1rem;
+  color: #e9edef;
+  -webkit-text-fill-color: #e9edef;
+  opacity: 1;
+  transition: color 200ms ease-in-out;
+  /* font-weight: 500; */
+  margin: 0;
+  padding: 0;
+  border: 0;
+  max-width: 150px;
+  background-color: transparent;
+  padding-bottom: 5px;
+}
+.animatedInput input.dark {
+  -webkit-text-fill-color: #fff;
+  color: #fff;
+}
+.animatedInput input:focus {
+  outline: 0;
+}
+.animatedInput {
+  position: relative;
+}
+.animatedInput > .border {
+  background-color: #1d90f5;
+  position: absolute;
+  bottom: -3px;
+  width: 100%;
+  height: 2px;
+  transition: background-color 400ms ease-in-out;
+  border-radius: 5px;
+  transform-origin: left;
+  transform: scaleX(0);
+}
+.animatedInput > .border.active {
+  animation: lineMove 500ms ease-in-out forwards;
+}
+.animatedInput > .border.active-reverse {
+  animation: lineMove-reverse 500ms ease-in-out forwards;
+}
+.animatedInput > .fa-pen {
+  cursor: pointer;
+  font-size: 1.1rem;
+  position: absolute;
+  right: 1px;
+  top: 4px;
+  z-index: 4;
+}
+.animatedInput > .fa-check {
+  cursor: pointer;
+  z-index: 2;
+  position: absolute;
+  font-size: 1.5rem;
+  right: 0px;
+  top: 1px;
+  opacity: 0;
+}
+@keyframes lineMove {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+@keyframes lineMove-reverse {
+  0% {
+    transform: scaleX(1);
+  }
+  100% {
+    transform: scaleX(0);
+  }
+}
+.fa-pen.hide {
+  animation: hidePen 300ms ease-in-out forwards;
+}
+.fa-pen.hide-reverse {
+  animation: hidePen-reverse 300ms ease-in-out forwards;
+}
+.fa-check.hide {
+  animation: hideCheck 300ms ease-in-out forwards;
+}
+.fa-check.hide-reverse {
+  animation: hideCheck-reverse 300ms ease-in-out forwards;
+}
+@keyframes hidePen {
+  0% {
+    z-index: 4;
+    opacity: 1;
+  }
+  100% {
+    z-index: 2;
+    opacity: 0;
+  }
+}
+@keyframes hidePen-reverse {
+  0% {
+    z-index: 2;
+    opacity: 0;
+  }
+  100% {
+    z-index: 4;
+    opacity: 1;
+  }
+}
+@keyframes hideCheck {
+  0% {
+    z-index: 2;
+    opacity: 0;
+  }
+  100% {
+    z-index: 4;
+    opacity: 1;
+  }
+}
+@keyframes hideCheck-reverse {
+  0% {
+    z-index: 4;
+    opacity: 1;
+  }
+  100% {
+    z-index: 2;
+    opacity: 0;
+  }
+}

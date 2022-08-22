@@ -14,6 +14,10 @@
   padding: 10px;
   padding-top: 40px;
 }
+
+.groupChat {
+  padding: 0;
+}
 .newChatRoom.show,
 .groupChat.show {
   transform: translateY(3%);
@@ -49,6 +53,15 @@
 .groupChatDetail > .heading > *:nth-child(2) {
   text-align: center;
 }
+.signupForm input {
+  -webkit-appearance: none;
+  padding: 9px 12px;
+  border-radius: 5px;
+  background-color: #fffffff5;
+  border: 1px solid rgba(221, 221, 221, 0.955);
+  font-size: 0.98rem;
+  width: 100%;
+}
 
 .newChatRoom .next,
 .groupChatDetail .next {
@@ -61,11 +74,23 @@
   color: #fff;
   height: 1.8rem;
   border: 0;
+  font-size: 0.9rem;
+  -webkit-appearance: none;
+  border-radius: 5px;
+  width: 100%;
+  outline: none;
 }
-.newChatRoomDetail input:focus,
+
+/* .newChatRoomDetail input:focus,
+  .groupChatDetail input:focus {
+    -webkit-box-shadow: 0 0 0.6px 0.6px rgba(186, 188, 188, 0.719);
+    box-shadow: 0 0 0.6px 0.6px rgba(186, 188, 188, 0.719);
+    outline: 0;
+  } */
+/* .newChatRoomDetail input:focus,
 .groupChatDetail input:focus {
   box-shadow: 0 0;
-}
+} */
 .newChatRoomDetail .userSearch,
 .groupChatDetail .userSearch {
   position: relative;
@@ -98,6 +123,9 @@
 .userList > * :hover {
   filter: brightness(85%);
 }
+.userList.grp > * :hover {
+  filter: initial;
+}
 
 .userList::-webkit-scrollbar {
   width: 5px;
@@ -128,4 +156,7 @@
 }
 .userList > div > i:hover {
   filter: brightness(85%);
+}
+.userList.grp > div > i:hover {
+  filter: initial;
 }

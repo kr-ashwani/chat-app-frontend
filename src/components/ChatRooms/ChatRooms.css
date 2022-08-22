@@ -1,6 +1,5 @@
 .chatGroup {
   position: relative;
-  padding-top: 8px;
   background-color: rgba(29, 27, 27, 0.844);
   background-color: #1d1b1b;
   display: flex;
@@ -13,6 +12,7 @@
   gap: 8px;
   position: relative;
   z-index: 2;
+  padding-top: 8px;
 }
 .chatRoomList {
   position: relative;
