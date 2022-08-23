@@ -1,3 +1,7 @@
 .grp-list {
   width: 100%;
 }
+.grp-list-user {
+  width: 60px;
+  min-height: 50px;
+}

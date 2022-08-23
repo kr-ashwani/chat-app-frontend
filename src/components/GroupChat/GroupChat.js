@@ -15,6 +15,10 @@ const GroupChat = () => {
   const [filteredUserList, setFilteredUserList] = useState([]);
   const { socket } = useSocket();
   const selectedUserRef = useRef();
+  const fixListScrollRef = useRef({
+    flag: 0,
+    scrollPosition: null,
+  });
 
   useEffect(() => {
     async function getUserList(payload) {
@@ -86,6 +90,7 @@ const GroupChat = () => {
             newArr.pop();
             return newArr;
           });
+          fixListScrollRef.current.flag = 1;
           selectedUserRef.current = null;
         }, 210);
       }, 300);
@@ -97,6 +102,24 @@ const GroupChat = () => {
       ]);
     }
   }
+
+  useEffect(() => {
+    const grpList = Array.from(document.getElementsByClassName('grp-list'))[0];
+    grpList.addEventListener('scroll', (e) => {
+      fixListScrollRef.current.scrollPosition = grpList.scrollLeft;
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!fixListScrollRef.current.flag) return;
+    const grpList = Array.from(document.getElementsByClassName('grp-list'))[0];
+    grpList.scrollLeft = fixListScrollRef.current.scrollPosition;
+
+    fixListScrollRef.current = {
+      flag: 0,
+      scrollPosition: 0,
+    };
+  }, [selectedUser]);
 
   useEffect(() => {
     if (!selectedUserRef.current) return;
