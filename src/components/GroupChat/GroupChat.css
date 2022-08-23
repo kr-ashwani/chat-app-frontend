@@ -9,8 +9,6 @@
 }
 .groupChat {
   overflow-y: auto;
-  -webkit-perspective: 1000;
-  -webkit-backface-visibility: hidden;
 }
 .grp-heading > p {
   padding-top: 5px;
@@ -116,8 +114,9 @@
   position: absolute;
   top: -8px;
   right: -8px;
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
+  /* padding: ; */
   display: flex;
   align-items: center;
   justify-content: center;
