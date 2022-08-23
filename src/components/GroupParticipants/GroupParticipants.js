@@ -1,9 +1,14 @@
 import React from 'react';
 import UserAvatar from '../UserAvatar/UserAvatar';
+import './GroupParticipants.css';
 
-const GroupParticipants = ({ selectedUser, addParticipants }) => {
+const GroupParticipants = ({
+  selectedUser,
+  addParticipants,
+  alreadySelected = false,
+}) => {
   return (
-    <div className="grp-list">
+    <div className={`grp-list ${alreadySelected ? 'selected' : ''}`}>
       {selectedUser.map((elm, id) => (
         <div
           key={elm._id}

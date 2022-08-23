@@ -58,21 +58,28 @@ const GroupChat = () => {
       : e.currentTarget;
 
     const userID = id ? e.currentTarget.dataset.id : container.dataset.userid;
+
     selectedUserRef.current = userID;
     if (container === null || container.classList.contains('selected')) {
       if (container) container.classList.remove('selected');
       selectedUserRef.current = 'occupied';
-      const box = document.querySelector(`[data-listuserid="${userID}"]`);
-      box.style.transform = 'scale(0)';
-      const grpList = document.getElementsByClassName('grp-list')[0];
-      grpList.classList.add('animateTranslate');
+      const box = document.querySelectorAll(`[data-listuserid="${userID}"]`);
+      box.forEach((elem) => {
+        elem.style.transform = 'scale(0)';
+      });
+      const grpList = Array.from(document.getElementsByClassName('grp-list'));
+      grpList.forEach((elem) => {
+        elem.classList.add('animateTranslate');
+      });
       setTimeout(() => {
         setSelectedUser((prev) => prev.filter((elem) => elem._id !== userID));
         setTimeout(() => {
-          grpList.classList.remove('animateTranslate');
+          grpList.forEach((elem) => {
+            elem.classList.remove('animateTranslate');
+          });
           selectedUserRef.current = null;
         }, 210);
-      }, 200);
+      }, 300);
     } else {
       container.classList.add('selected');
       setSelectedUser((prev) => [
@@ -85,22 +92,23 @@ const GroupChat = () => {
   useEffect(() => {
     if (!selectedUserRef.current) return;
 
-    const box = document.querySelector(
+    const box = document.querySelectorAll(
       `[data-listuserid="${selectedUserRef.current}"]`
     );
-    const grpList = document.getElementsByClassName('grp-list')[0];
-    if (box) {
-      grpList.scrollLeft = grpList.scrollHeight + 999;
-      if (grpList.scrollHeight - grpList.clientWidth > 0)
-        setTimeout(() => {
-          box.style.transform = 'scale(1)';
-        }, 150);
-      else
-        setTimeout(() => {
-          box.style.transform = 'scale(1)';
-        }, 10);
+    const grpList = Array.from(document.getElementsByClassName('grp-list'));
+    if (box.length) {
+      grpList.forEach((elem) => {
+        elem.scrollLeft = elem.scrollWidth + 999;
+        if (elem.scrollWidth - elem.clientWidth > 0)
+          setTimeout(() => {
+            box.forEach((elem) => (elem.style.transform = 'scale(1)'));
+          }, 230);
+        else
+          setTimeout(() => {
+            box.forEach((elem) => (elem.style.transform = 'scale(1)'));
+          }, 20);
+      });
     }
-
     setTimeout(() => {
       selectedUserRef.current = null;
     }, 290);
@@ -138,7 +146,7 @@ const GroupChat = () => {
                 if (selectedUser.length)
                   setSlideInfo({
                     direction: 'right',
-                    component: <GroupInfo />,
+                    component: <GroupInfo setSlideInfo={setSlideInfo} />,
                   });
               }}
               className={`next ${selectedUser.length ? '' : 'hide'}`}>
@@ -156,6 +164,7 @@ const GroupChat = () => {
           </div>
 
           <GroupParticipants
+            userList={userList}
             selectedUser={selectedUser}
             addParticipants={addParticipants}
           />

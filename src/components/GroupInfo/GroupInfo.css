@@ -2,3 +2,13 @@
   min-height: 100%;
   background-color: #2f3134;
 }
+.groupChat.show {
+  transform: translateY(0%) !important;
+}
+
+.grp-info-column {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

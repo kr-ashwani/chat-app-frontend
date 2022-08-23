@@ -75,6 +75,9 @@
   overflow-y: auto;
   scroll-behavior: smooth;
 }
+.grp-list > *:last-child {
+  padding-right: 30px;
+}
 .grp-user-cvr {
   transform: scale(0);
   transition: transform 300ms ease-in-out;
