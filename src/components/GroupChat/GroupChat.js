@@ -72,10 +72,19 @@ const GroupChat = () => {
         elem.classList.add('animateTranslate');
       });
       setTimeout(() => {
-        setSelectedUser((prev) => prev.filter((elem) => elem._id !== userID));
+        setSelectedUser((prev) => {
+          const newArr = prev.filter((elem) => elem._id !== userID);
+          newArr.push({ role: 'dummy', _id: Date.now() });
+          return newArr;
+        });
         setTimeout(() => {
           grpList.forEach((elem) => {
             elem.classList.remove('animateTranslate');
+          });
+          setSelectedUser((prev) => {
+            const newArr = [...prev];
+            newArr.pop();
+            return newArr;
           });
           selectedUserRef.current = null;
         }, 210);
