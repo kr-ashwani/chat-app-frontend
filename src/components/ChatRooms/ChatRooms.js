@@ -43,9 +43,13 @@ const ChatGroup = () => {
   }, []);
 
   useEffect(() => {
-    function createChatRoom({ newChatRoom, firstName, lastName, photoUrl }) {
-      if (!newChatRoom.GroupChatName)
-        newChatRoom = { firstName, lastName, photoUrl, ...newChatRoom };
+    function createChatRoom({
+      newChatRoom,
+      firstName = 'group',
+      lastName = 'chat',
+      photoUrl = 'null',
+    }) {
+      newChatRoom = { firstName, lastName, photoUrl, ...newChatRoom };
       setChatRooms((prev) => ({
         ...prev,
         [newChatRoom.chatRoomID]: newChatRoom,
