@@ -22,17 +22,6 @@ const Header = () => {
     return () => window.removeEventListener('resize', setVh);
   }, []);
 
-  // async function logOut(e) {
-  //   e.preventDefault();
-  //   await fetch(`${process.env.REACT_APP_SERVER_ENDPOINT}/logout`, {
-  //     credentials: 'include',
-  //   });
-  //   setUser({
-  //     currentUser: null,
-  //     accessToken: null,
-  //   });
-  // }
-
   return !currentUser ? (
     <nav>
       <div className="navbar">

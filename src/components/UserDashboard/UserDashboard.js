@@ -48,7 +48,10 @@ const UserDashboard = ({ setSlideInfo }) => {
 
       <UserAvatar
         size="200px"
-        changeAvatar={true}
+        changeAvatarInfo={{
+          type: 'hover',
+          message: 'change profile photo',
+        }}
         imgSrc={currentUser.photoUrl}
         fileUploadedCb={getChangedValue}
       />

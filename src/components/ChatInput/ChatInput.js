@@ -18,6 +18,8 @@ const ChatInput = () => {
   const pendingMsg = useRef({});
   const pendingChatRoom = useRef([]);
   const { chatRoomMessages, setChatRoomMessages } = useMessage();
+  const { newGroupChatInfo, setNewGroupChatInfo } = useChatRoom();
+  const createNewGroupChat = useRef(false);
 
   const { selectedChat, setSelectedChat } = useSelectedChat();
   const { socket } = useSocket();
@@ -100,7 +102,7 @@ const ChatInput = () => {
   }
 
   //message is sent to server and local message and chatRoom State is updated
-  function sendMessage() {
+  function sendMessage({ msgType }) {
     messageDiv.current.focus();
     if (!message.length || (message.length && !message.trim().length)) {
       setMessage('');
@@ -120,7 +122,7 @@ const ChatInput = () => {
       senderPhotoUrl: currentUser.photoUrl,
       senderName: currentUser.firstName + ' ' + currentUser.lastName,
       message: message.trim(),
-      messageType: 'text',
+      messageType: msgType ? 'information' : 'text',
       createdAt,
       updatedAt: createdAt,
       showUserInfo: true,
@@ -209,9 +211,17 @@ const ChatInput = () => {
         createdAt: createdAt - 2,
         chatRoomID: messageData.chatRoomID,
         lastMessageTimestamp: createdAt - 2,
-        participants: [currentUser._id, selectedChat.selectedUserID],
+        participants: selectedChat.selectedUserID
+          ? [currentUser._id, selectedChat.selectedUserID]
+          : newGroupChatInfo.participants,
         messageData,
         msgInfoTime,
+        groupChatPicture: newGroupChatInfo.groupChatName
+          ? newGroupChatInfo.groupChatPicture
+          : '',
+        groupChatName: newGroupChatInfo.groupChatName
+          ? newGroupChatInfo.groupChatName
+          : '',
       });
 
       pendingChatRoom.current.push(messageData.chatRoomID);
@@ -284,7 +294,16 @@ const ChatInput = () => {
         updatedAt: createdAt,
         createdAt,
         chatRoomID: messageData.chatRoomID,
-        participants: [currentUser._id, selectedChat.selectedUserID],
+        participants: selectedChat.selectedUserID
+          ? [currentUser._id, selectedChat.selectedUserID]
+          : newGroupChatInfo.participants,
+
+        groupChatPicture: newGroupChatInfo.groupChatName
+          ? newGroupChatInfo.groupChatPicture
+          : '',
+        groupChatName: newGroupChatInfo.groupChatName
+          ? newGroupChatInfo.groupChatName
+          : '',
       };
       setChatRooms((prev) => {
         return {
@@ -317,6 +336,11 @@ const ChatInput = () => {
 
     setMessage('');
     messageDiv.current.innerText = '';
+    setNewGroupChatInfo({
+      groupChatName: '',
+      groupChatPicture: '',
+      participants: [],
+    });
     //chatList scroll back to normal
     const chatList = document.getElementsByClassName('chatList')[0];
     const msgelem = document.getElementsByClassName('msgReplyPreview')[0];
@@ -408,6 +432,28 @@ const ChatInput = () => {
     chatList.style.scrollBehavior = 'smooth';
     chatList.scrollTop = chatList.scrollHeight;
     chatList.style.scrollBehavior = 'auto';
+  }, [message]);
+
+  useEffect(() => {
+    if (!newGroupChatInfo.groupChatName) return;
+    setMessage(
+      `${currentUser.firstName} ${currentUser.lastName} created the group.`
+    );
+    setSelectedChat({
+      firstName: 'group',
+      lastName: 'chat',
+      photoUrl: 'groupChat',
+      selectedUserID: null,
+    });
+    createNewGroupChat.current = true;
+  }, [newGroupChatInfo, setMessage, setSelectedChat, currentUser]);
+
+  useEffect(() => {
+    if (createNewGroupChat.current) {
+      sendMessage({ msgType: 'information' });
+      createNewGroupChat.current = false;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [message]);
 
   return (

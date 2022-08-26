@@ -32,3 +32,6 @@
 .changeAvatar:hover {
   opacity: 1;
 }
+.changeAvatar.show {
+  opacity: 1;
+}

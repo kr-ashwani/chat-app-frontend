@@ -96,9 +96,18 @@ const DisplayChat = () => {
 
             setSelectedChat(null);
           }}></i>
-        <UserAvatar imgSrc={selectedChat?.photoUrl} size="30px" />
+        <UserAvatar
+          imgSrc={
+            selectedChat && selectedChat?.groupChatName
+              ? selectedChat.groupChatPicture
+              : selectedChat?.photoUrl
+          }
+          size="30px"
+        />
         <h3 style={{ marginLeft: '10px' }}>
-          {selectedChat
+          {selectedChat && selectedChat?.groupChatName
+            ? selectedChat?.groupChatName
+            : selectedChat
             ? selectedChat.firstName + ' ' + selectedChat.lastName
             : '😍'}
         </h3>

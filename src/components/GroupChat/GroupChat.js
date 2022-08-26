@@ -15,6 +15,7 @@ const GroupChat = () => {
   const [filteredUserList, setFilteredUserList] = useState([]);
   const { socket } = useSocket();
   const selectedUserRef = useRef();
+  const debounceRef = useRef(Date.now());
   const fixListScrollRef = useRef({
     flag: 0,
     scrollPosition: null,
@@ -178,7 +179,13 @@ const GroupChat = () => {
                 if (selectedUser.length)
                   setSlideInfo({
                     direction: 'right',
-                    component: <GroupInfo setSlideInfo={setSlideInfo} />,
+                    component: (
+                      <GroupInfo
+                        setSelectedUser={setSelectedUser}
+                        selectedUser={selectedUser}
+                        setSlideInfo={setSlideInfo}
+                      />
+                    ),
                   });
               }}
               className={`next ${selectedUser.length ? '' : 'hide'}`}>
@@ -196,6 +203,7 @@ const GroupChat = () => {
           </div>
 
           <GroupParticipants
+            debounceRef={debounceRef}
             userList={userList}
             selectedUser={selectedUser}
             addParticipants={addParticipants}
@@ -210,7 +218,12 @@ const GroupChat = () => {
                   className={`grp-user-info ${
                     checkSelectedList(elm._id) ? 'selected' : ''
                   }`}
-                  onClick={addParticipants}>
+                  onClick={(e) => {
+                    if (Date.now() - debounceRef.current > 500) {
+                      addParticipants(e);
+                      debounceRef.current = Date.now();
+                    }
+                  }}>
                   <p>{elm.firstName + ' ' + elm.lastName}</p>
                   <div className="grp-include">
                     <div className="grp-include-circle">

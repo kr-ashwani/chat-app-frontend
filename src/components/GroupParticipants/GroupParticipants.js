@@ -6,6 +6,7 @@ const GroupParticipants = ({
   selectedUser,
   addParticipants,
   alreadySelected = false,
+  debounceRef,
 }) => {
   return (
     <div className={`grp-list ${alreadySelected ? 'selected' : ''}`}>
@@ -22,7 +23,12 @@ const GroupParticipants = ({
               <div className="grp-unselect">
                 <svg
                   data-id={elm._id}
-                  onClick={(e) => addParticipants(e, 'unselect')}
+                  onClick={(e) => {
+                    if (Date.now() - debounceRef.current > 500) {
+                      addParticipants(e, 'unselect');
+                      debounceRef.current = Date.now();
+                    }
+                  }}
                   xmlns="http://www.w3.org/2000/svg"
                   height="24px"
                   viewBox="0 0 24 24"

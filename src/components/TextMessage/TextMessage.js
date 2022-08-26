@@ -108,6 +108,7 @@ const TextMessage = ({ message }) => {
           touch.clientX - x
         }px,0,0)`;
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return !extraInfo ? (
@@ -203,7 +204,11 @@ const TextMessage = ({ message }) => {
     </div>
   ) : (
     <div className="extraInfo">
-      <p>{getDateString(message.createdAt, true)}</p>
+      {message.message ? (
+        <p>{message.message}</p>
+      ) : (
+        <p>{getDateString(message.createdAt, true)}</p>
+      )}
     </div>
   );
 };

@@ -8,7 +8,7 @@ const UserAvatar = ({
   size,
   clickFunction,
   AvatarStyle = {},
-  changeAvatar = false,
+  changeAvatarInfo = {},
   fileUploadedCb,
 }) => {
   const fileRef = useRef();
@@ -19,6 +19,11 @@ const UserAvatar = ({
   function selectFile(e) {
     if (fileRef.current) fileRef.current.click();
   }
+
+  const msg = changeAvatarInfo.message
+    ? changeAvatarInfo.message.split(' ')
+    : [''];
+  msg.shift();
   return (
     <div
       onClick={() => {
@@ -26,8 +31,8 @@ const UserAvatar = ({
       }}
       className="userAvatar"
       style={{ ...{ height: size, width: size }, ...AvatarStyle }}>
-      {changeAvatar ? (
-        <div className="changeAvatar">
+      {changeAvatarInfo.type ? (
+        <div className={`changeAvatar ${changeAvatarInfo.type}`}>
           <input
             ref={fileRef}
             type="file"
@@ -44,9 +49,9 @@ const UserAvatar = ({
           </span>
           <div data-testid="avatar-text">
             <span style={{ textAlign: 'center', display: 'block' }}>
-              Change{' '}
+              {changeAvatarInfo.message.split(' ')[0]}{' '}
             </span>{' '}
-            profile photo
+            {msg.join(' ')}
           </div>
         </div>
       ) : (

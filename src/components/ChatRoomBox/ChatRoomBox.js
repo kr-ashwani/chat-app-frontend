@@ -22,12 +22,21 @@ const ChatRoomBox = ({ chatRoomDetail }) => {
       className={`chatRoomBox ${chatRoomDetail.chatRoomID}`}
       onClick={(e) => openChatRoomMessages(e, chatRoomDetail)}>
       <div className="chatRoomImg">
-        <UserAvatar imgSrc={chatRoomDetail.photoUrl} size="50px" />
+        <UserAvatar
+          imgSrc={
+            chatRoomDetail.groupChatName
+              ? chatRoomDetail.groupChatPicture
+              : chatRoomDetail.photoUrl
+          }
+          size="50px"
+        />
       </div>
       <div className="chatRoomDetail">
         <div className="chatRoomName">
           <span>
-            {chatRoomDetail.firstName + ' ' + chatRoomDetail.lastName}
+            {chatRoomDetail.groupChatName
+              ? chatRoomDetail.groupChatName
+              : chatRoomDetail.firstName + ' ' + chatRoomDetail.lastName}
           </span>
           <span>{getDateString(chatRoomDetail.lastMessageTimestamp)}</span>
         </div>
