@@ -49,6 +49,7 @@ const ChatGroup = () => {
       lastName = 'chat',
       photoUrl = 'null',
     }) {
+      console.log(newChatRoom);
       newChatRoom = { firstName, lastName, photoUrl, ...newChatRoom };
       setChatRooms((prev) => ({
         ...prev,
