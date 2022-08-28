@@ -587,6 +587,7 @@ const ChatInput = () => {
       sendMessage({ fileMessage: elem });
     });
     multipleFileNewRoom.current = {};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedChat]);
 
   return (
