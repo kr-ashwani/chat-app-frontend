@@ -7,6 +7,7 @@ import './ChatInput.css';
 import { v4 as uuid } from 'uuid';
 import useReply from '../../hooks/useReply';
 import useMessage from './../../hooks/useChatRoomMessage';
+import uploadFile from './../../utils/uploadFile';
 
 const ChatInput = () => {
   const { currentUser } = useAuth();
@@ -20,12 +21,16 @@ const ChatInput = () => {
   const { chatRoomMessages, setChatRoomMessages } = useMessage();
   const { newGroupChatInfo, setNewGroupChatInfo } = useChatRoom();
   const createNewGroupChat = useRef(false);
+  const scrollMsg = useRef(0);
 
   const { selectedChat, setSelectedChat } = useSelectedChat();
   const { socket } = useSocket();
   const { setChatRooms } = useChatRoom();
+  let container = useRef();
 
   const { setRepliedMessage, repliedMessage } = useReply();
+
+  const multipleFileNewRoom = useRef({});
 
   //emoji pick logic
   useEffect(() => {
@@ -81,7 +86,7 @@ const ChatInput = () => {
       const currentChatWidth =
         document.getElementsByClassName('chatInput')[0].offsetWidth;
       const chatDiv = document.getElementsByClassName('chatToSend')[0];
-      chatDiv.style.width = `${currentChatWidth - 25 - 48 - 20}px`;
+      chatDiv.style.width = `${currentChatWidth - 25 - 48 - 20 - 30}px`;
     }
     window.addEventListener('resize', setInputWidth);
     return () => window.removeEventListener('resize', setInputWidth);
@@ -102,13 +107,15 @@ const ChatInput = () => {
   }
 
   //message is sent to server and local message and chatRoom State is updated
-  function sendMessage({ msgType }) {
-    messageDiv.current.focus();
-    if (!message.length || (message.length && !message.trim().length)) {
-      setMessage('');
-      messageDiv.current.innerText = '';
-      return;
-    }
+  function sendMessage({ msgType = null, fileMessage = null }) {
+    if (!fileMessage) messageDiv.current.focus();
+    if (!fileMessage)
+      if (!message.length || (message.length && !message.trim().length)) {
+        setMessage('');
+        messageDiv.current.innerText = '';
+        return;
+      }
+
     if (!selectedChat) return;
     console.log('message sent : ', message);
 
@@ -121,8 +128,12 @@ const ChatInput = () => {
       senderID: currentUser._id,
       senderPhotoUrl: currentUser.photoUrl,
       senderName: currentUser.firstName + ' ' + currentUser.lastName,
-      message: message.trim(),
-      messageType: msgType ? 'information' : 'text',
+      message: fileMessage ? '' : message.trim(),
+      messageType: fileMessage
+        ? `file-${fileMessage.type}`
+        : msgType
+        ? 'information'
+        : 'text',
       createdAt,
       updatedAt: createdAt,
       showUserInfo: true,
@@ -135,7 +146,39 @@ const ChatInput = () => {
       },
       repliedMessageID: repliedMessage.messageID,
       repliedMessage: repliedMessage.messageID && repliedMessage,
+      fileInfo: fileMessage
+        ? {
+            fileName: fileMessage.name,
+            size: fileMessage.size,
+            type: fileMessage.type,
+            url: '',
+            extension: fileMessage.name.split('.').pop(),
+          }
+        : null,
+      fileProgressInfo: fileMessage
+        ? ['video', 'image'].includes(fileMessage.type.split('/')[0])
+          ? null
+          : {
+              loaded: 0,
+              total: fileMessage.size,
+              remainingBytes: fileMessage.size,
+              fileSent: 0,
+              rateUnit: '0b/s',
+              rate: '0',
+            }
+        : null,
     };
+
+    if (fileMessage) {
+      uploadFile(
+        fileMessage,
+        updateLinkMessage,
+        null,
+        [`${messageData.chatRoomID}/${messageData.messageID}`],
+        updateProgressMessage
+      );
+      scrollMsg.current = 1;
+    }
 
     if (selectedChat.chatRoomID) {
       const chatMsgsArr = Object.values(
@@ -168,6 +211,8 @@ const ChatInput = () => {
             delivered: false,
           },
           repliedMessageID: null,
+          fileInfo: null,
+          fileProgressInfo: null,
         };
       if (!pendingMsg.current[selectedChat.chatRoomID])
         pendingMsg.current[selectedChat.chatRoomID] = [];
@@ -175,12 +220,15 @@ const ChatInput = () => {
       if (check) pendingMsg.current[selectedChat.chatRoomID].push(msgInfoTime);
       else pendingMsg.current[selectedChat.chatRoomID].push(messageData);
 
-      if (socket.connected)
-        if (pendingMsg.current[selectedChat.chatRoomID].length === 1) {
-          socket.emit('online:message', {
-            messageData: pendingMsg.current[selectedChat.chatRoomID][0],
-          });
+      if (socket.connected) {
+        if (!messageData.fileInfo) {
+          if (pendingMsg.current[selectedChat.chatRoomID].length === 1) {
+            socket.emit('online:message', {
+              messageData: pendingMsg.current[selectedChat.chatRoomID][0],
+            });
+          }
         }
+      }
 
       if (check) pendingMsg.current[selectedChat.chatRoomID].push(messageData);
     } else {
@@ -201,6 +249,8 @@ const ChatInput = () => {
           delivered: false,
         },
         repliedMessageID: null,
+        fileInfo: null,
+        fileProgressInfo: null,
       };
 
       socket.emit('chatRoom:create', {
@@ -236,7 +286,7 @@ const ChatInput = () => {
           ...prev,
           [selectedChat.chatRoomID]: {
             ...chatRoom,
-            lastMessage: message.trim(),
+            lastMessage: fileMessage ? fileMessage.name : message.trim(),
             lastMessageType: 'text',
             lastMessageID: messageID,
             updatedAt: createdAt,
@@ -288,8 +338,8 @@ const ChatInput = () => {
         lastName: selectedChat.lastName,
         photoUrl: selectedChat.photoUrl,
         lastMessageTimestamp: createdAt,
-        lastMessage: message.trim(),
-        lastMessageType: 'text',
+        lastMessage: fileMessage ? fileMessage.name : message.trim(),
+        lastMessageType: messageData.messageType,
         lastMessageID: messageID,
         updatedAt: createdAt,
         createdAt,
@@ -334,34 +384,38 @@ const ChatInput = () => {
       }, 200);
     }
 
-    setMessage('');
-    messageDiv.current.innerText = '';
-    setNewGroupChatInfo({
-      groupChatName: '',
-      groupChatPicture: '',
-      participants: [],
-    });
+    if (!fileMessage) {
+      setMessage('');
+      messageDiv.current.innerText = '';
+      setNewGroupChatInfo({
+        groupChatName: '',
+        groupChatPicture: '',
+        participants: [],
+      });
+    }
     //chatList scroll back to normal
     const chatList = document.getElementsByClassName('chatList')[0];
     const msgelem = document.getElementsByClassName('msgReplyPreview')[0];
 
-    if (msgelem && chatList) {
-      // chatList.scrollTop -= msgelem.clientHeight;
-      chatList.style.setProperty('height', '100%');
-      chatList.style.transform = `translateY(0)`;
-      msgelem.style.transform = 'translateY(0%)';
+    if (repliedMessage.messageID) {
+      if (msgelem && chatList) {
+        // chatList.scrollTop -= msgelem.clientHeight;
+        chatList.style.setProperty('height', '100%');
+        chatList.style.transform = `translateY(0)`;
+        msgelem.style.transform = 'translateY(0%)';
+      }
+      setTimeout(() => {
+        setRepliedMessage({
+          message: '',
+          senderID: '',
+          messageType: '',
+          messageID: null,
+          chatRoomID: null,
+          senderName: '',
+          senderPhotoUrl: '',
+        });
+      }, 510);
     }
-    setTimeout(() => {
-      setRepliedMessage({
-        message: '',
-        senderID: '',
-        messageType: '',
-        messageID: null,
-        chatRoomID: null,
-        senderName: '',
-        senderPhotoUrl: '',
-      });
-    }, 510);
     messageDiv.current.focus();
   }
 
@@ -418,7 +472,10 @@ const ChatInput = () => {
 
       const messageData = pendingMsg.current[chatRoomID][0];
       if (messageData)
-        socket.emit('message:create', { messageData, checkPending: true });
+        if (!messageData.fileInfo)
+          socket.emit('message:create', { messageData, checkPending: true });
+        else if (messageData.fileInfo.url)
+          socket.emit('message:create', { messageData, checkPending: true });
     }
     socket.on('chatRoom:send:moreMsgs', sendMorePendingMessages);
     return () => socket.off('chatRoom:send:moreMsgs', sendMorePendingMessages);
@@ -456,6 +513,82 @@ const ChatInput = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [message]);
 
+  useEffect(() => {
+    document.getElementsByTagName('body')[0].addEventListener('click', unSub);
+
+    function unSub(e) {
+      if (document.getElementsByClassName('attachment')[0].contains(e.target)) {
+        if (container.current.contains(e.target))
+          container.current.classList.add('show');
+      } else container.current.classList.remove('show');
+    }
+
+    return () => {
+      document
+        .getElementsByTagName('body')[0]
+        .removeEventListener('click', unSub);
+    };
+  }, []);
+
+  function updateLinkMessage({ fileID, fileUrl }) {
+    const chatRoomID = fileID.split('/')[0];
+    const messageID = fileID.split('/')[1];
+
+    setChatRoomMessages((prev) => {
+      const prevMsg = prev[chatRoomID][messageID];
+      prevMsg.fileInfo.url = fileUrl;
+      return { ...prev };
+    });
+    let i;
+    for (i = 0; i < pendingMsg.current[chatRoomID].length; i++) {
+      if (pendingMsg.current[chatRoomID][i].messageID === messageID) {
+        pendingMsg.current[chatRoomID][i].fileInfo.url = fileUrl;
+        break;
+      }
+    }
+    if (i === 0) {
+      const messageData = pendingMsg.current[chatRoomID][0];
+      socket.emit('message:create', { messageData, checkPending: true });
+      pendingMsg.current[chatRoomID].shift();
+    }
+  }
+
+  function updateProgressMessage(progressInfo) {
+    const chatRoomID = progressInfo.fileID.split('/')[0];
+    const messageID = progressInfo.fileID.split('/')[1];
+
+    setChatRoomMessages((prev) => {
+      const prevMsg = prev[chatRoomID][messageID];
+      if (!prevMsg.fileProgressInfo) return prev;
+      prevMsg.fileProgressInfo.loaded = progressInfo.loaded;
+      prevMsg.fileProgressInfo.fileSent = progressInfo.fileSent;
+      prevMsg.fileProgressInfo.remainingBytes = progressInfo.remainingBytes;
+      prevMsg.fileProgressInfo.rateUnit = progressInfo.rateUnit;
+      prevMsg.fileProgressInfo.rate = Math.round(progressInfo.rate);
+      return { ...prev };
+    });
+  }
+
+  useEffect(() => {
+    if (scrollMsg.current) {
+      const chatList = document.getElementsByClassName('chatList')[0];
+      chatList.style.scrollBehavior = 'smooth';
+      chatList.scrollTop = chatList.scrollHeight;
+      chatList.style.scrollBehavior = 'auto';
+      scrollMsg.current = 0;
+    }
+  }, [chatRoomMessages]);
+
+  useEffect(() => {
+    if (!multipleFileNewRoom.current.files) return;
+
+    multipleFileNewRoom.current.files.forEach((elem, id) => {
+      if (id === 0) return;
+      sendMessage({ fileMessage: elem });
+    });
+    multipleFileNewRoom.current = {};
+  }, [selectedChat]);
+
   return (
     <div className="chatInput">
       <div className="emoji">
@@ -469,6 +602,66 @@ const ChatInput = () => {
             else emojiPicker.current.style.display = 'block';
           }}></i>
         <emoji-picker ref={emojiPicker} className="emojiHide"></emoji-picker>
+      </div>
+
+      <div
+        className="attachment"
+        onClick={(e) => {
+          container.current.classList.toggle('show');
+        }}>
+        <div className="attachment-list" ref={container}>
+          <div className="attachment-item">
+            <input
+              type="file"
+              accept="video/*,image/*"
+              multiple
+              onChange={(e) => {
+                if (selectedChat.chatRoomID)
+                  Array.from(e.target.files).forEach((elem) => {
+                    sendMessage({ fileMessage: elem });
+                  });
+                else {
+                  sendMessage({ fileMessage: e.target.files[0] });
+                  multipleFileNewRoom.current = {
+                    files: Array.from(e.target.files),
+                  };
+                }
+                container.current.classList.remove('show');
+              }}
+            />
+            <span className="material-icons">collections</span>
+            <p>Photos and videos</p>
+          </div>
+          <div className="attachment-item">
+            <input
+              type="file"
+              multiple
+              onChange={(e) => {
+                if (selectedChat.chatRoomID)
+                  Array.from(e.target.files).forEach((elem) => {
+                    sendMessage({ fileMessage: elem });
+                  });
+                else {
+                  sendMessage({ fileMessage: e.target.files[0] });
+                  multipleFileNewRoom.current = {
+                    files: Array.from(e.target.files),
+                  };
+                }
+                container.current.classList.remove('show');
+              }}
+            />
+            <span className="material-icons">description</span>
+            <p>Documents</p>
+          </div>
+        </div>
+
+        <span data-testid="clip" data-icon="clip">
+          <svg viewBox="0 0 24 24" width="24" height="24">
+            <path
+              fill="currentColor"
+              d="M1.816 15.556v.002c0 1.502.584 2.912 1.646 3.972s2.472 1.647 3.974 1.647a5.58 5.58 0 0 0 3.972-1.645l9.547-9.548c.769-.768 1.147-1.767 1.058-2.817-.079-.968-.548-1.927-1.319-2.698-1.594-1.592-4.068-1.711-5.517-.262l-7.916 7.915c-.881.881-.792 2.25.214 3.261.959.958 2.423 1.053 3.263.215l5.511-5.512c.28-.28.267-.722.053-.936l-.244-.244c-.191-.191-.567-.349-.957.04l-5.506 5.506c-.18.18-.635.127-.976-.214-.098-.097-.576-.613-.213-.973l7.915-7.917c.818-.817 2.267-.699 3.23.262.5.501.802 1.1.849 1.685.051.573-.156 1.111-.589 1.543l-9.547 9.549a3.97 3.97 0 0 1-2.829 1.171 3.975 3.975 0 0 1-2.83-1.173 3.973 3.973 0 0 1-1.172-2.828c0-1.071.415-2.076 1.172-2.83l7.209-7.211c.157-.157.264-.579.028-.814L11.5 4.36a.572.572 0 0 0-.834.018l-7.205 7.207a5.577 5.577 0 0 0-1.645 3.971z"></path>
+          </svg>
+        </span>
       </div>
 
       <div className="chatToSend">

@@ -1,0 +1,157 @@
+.icon {
+  width: 40px;
+}
+.msgFile {
+  padding: 10px 10px 10px 15px;
+  display: flex;
+}
+.fileInfo {
+  width: 170px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.fileInfo > div {
+  line-height: 1.2rem;
+  display: flex;
+  width: 100%;
+}
+.fileInfo > div > p {
+  padding: 0 5px 0 10px;
+  text-overflow: ellipsis;
+  display: inline-block;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  white-space: nowrap;
+  width: 1px;
+  /* flex-shrink:0; */
+  flex-grow: 1;
+}
+.fileStatus {
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.fileStatus > div {
+  cursor: pointer;
+}
+
+.fileDownload > span {
+  font-size: 1.6rem;
+  /* color:red; */
+}
+.fileOpen > span {
+  font-size: 1.4rem;
+}
+.msgFile.photoCover {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.msgPhotoInfo {
+  padding: 0 5px 5px 0;
+}
+.msgPhotoInfo {
+  width: 250px;
+}
+.msgPhoto {
+  width: 250px;
+  height: 350px;
+  overflow: hidden;
+  border-radius: 15px;
+  margin: 5px 5px 0 0;
+}
+.msgPhoto > img {
+  object-fit: cover;
+  width: 250px;
+  height: 350px;
+  object-position: center center;
+}
+.msgVideo {
+  padding-bottom: 10px;
+  border-radius: 10px;
+}
+.msgVideo > video {
+  width: 300px;
+}
+
+.fileOpen,
+.fileDownload {
+  position: relative;
+}
+.fileOpen > a,
+.fileDownload > a {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.fileImgLoading {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e2e6e8;
+}
+.fileVideoLoading {
+  width: 300px;
+  height: 169px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e2e6e8;
+}
+.fileLoadingLabel {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.loadingLabel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.7rem;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+.fileLoadingStats {
+  padding: 0 0 0 10px;
+  display: flex;
+  gap: 10px;
+  font-size: 0.85rem;
+}
+.fileLoadingStats > p > span {
+  display: inline-block;
+  /* overflow: hidden; */
+  text-align: center;
+  font-size: 0.7rem;
+  width: 40px;
+}
+
+@media only screen and(min-width:700px) {
+  .msgVideo > video {
+    width: 450px;
+  }
+  .fileDownload > span {
+    font-size: 7rem;
+  }
+  .fileOpen > span {
+    font-size: 1.6rem;
+  }
+  .msgVideo > video {
+    width: 300px;
+  }
+}
+@media only screen and(min-width:700px) {
+  .msgVideo > video {
+    width: 500px;
+  }
+}

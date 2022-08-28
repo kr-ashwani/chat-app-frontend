@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import './UserAvatar.css';
 import defaultAvatar from '../../assets/3dAvatar.png';
 import uploadFile from '../../utils/uploadFile';
+import { CircularProgress } from '@mui/material';
 
 const UserAvatar = ({
   imgSrc,
@@ -12,6 +13,7 @@ const UserAvatar = ({
   fileUploadedCb,
 }) => {
   const fileRef = useRef();
+  const loaderRef = useRef();
   function errorImage(e) {
     e.target.src = defaultAvatar;
     e.target.onerror = '';
@@ -31,6 +33,9 @@ const UserAvatar = ({
       }}
       className="userAvatar"
       style={{ ...{ height: size, width: size }, ...AvatarStyle }}>
+      <div ref={loaderRef} className="avatarLoading">
+        <CircularProgress size={'60px'} />
+      </div>
       {changeAvatarInfo.type ? (
         <div className={`changeAvatar ${changeAvatarInfo.type}`}>
           <input
@@ -38,7 +43,10 @@ const UserAvatar = ({
             type="file"
             accept="image/gif,image/jpeg,image/jpg,image/png"
             style={{ display: 'none' }}
-            onChange={(e) => uploadFile(e, fileUploadedCb)}
+            onChange={(e) => {
+              loaderRef.current.classList.add('show');
+              uploadFile(e, fileUploadedCb, loaderRef.current);
+            }}
           />
           <span data-testid="camera" data-icon="camera" onClick={selectFile}>
             <svg viewBox="0 0 24 24" width="24" height="24">

@@ -1,5 +1,11 @@
-const uploadFile = async (e, uploadCb, progressCb) => {
-  const files = e.target.files;
+const uploadFile = async (
+  e,
+  uploadCb,
+  laodingElement = null,
+  fileID = [],
+  progressCb
+) => {
+  const files = e.target ? e.target.files : [e];
   let i = 0;
 
   while (i < files.length) {
@@ -13,6 +19,8 @@ const uploadFile = async (e, uploadCb, progressCb) => {
       true
     );
 
+    if (fileID.length) formData.append('fileID', fileID[i]);
+
     formData.append('file-upload', files[i], files[i].name);
 
     req.upload.onprogress = uploadProgress;
@@ -21,11 +29,15 @@ const uploadFile = async (e, uploadCb, progressCb) => {
     };
     req.onload = () => {
       if (req.status === 200)
-        if (typeof uploadCb === 'function') uploadCb(JSON.parse(req.response));
+        if (typeof uploadCb === 'function') {
+          if (laodingElement) laodingElement.classList.remove('show');
+          uploadCb(JSON.parse(req.response));
+        }
     };
 
+    const progressInfo = {};
+    progressInfo.fileID = fileID[i];
     function uploadProgress(e) {
-      const progressInfo = {};
       let bytesSent = e.loaded - prevSentBytes;
       if (Math.round(bytesSent / (1024 * 1024 * 1024))) {
         bytesSent = bytesSent / (1024 * 1024 * 1024);
@@ -43,6 +55,7 @@ const uploadFile = async (e, uploadCb, progressCb) => {
       progressInfo.loaded = e.loaded;
       progressInfo.total = e.total;
       progressInfo.remainingBytes = e.total - e.loaded;
+      progressInfo.fileSent = Math.round((e.loaded / e.total) * 100);
       const time = (Date.now() - timeDiff) / 1000;
 
       if (time !== 0) {

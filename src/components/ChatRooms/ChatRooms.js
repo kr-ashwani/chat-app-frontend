@@ -176,7 +176,12 @@ const ChatGroup = () => {
                   }>
                   New group
                 </li>
-                <li>Setting</li>
+                <li
+                  onClick={() =>
+                    document.querySelector('.chatHeader>.userAvatar').click()
+                  }>
+                  Profile
+                </li>
                 <li onClick={logOut}>Log out</li>
               </ul>
             </div>
