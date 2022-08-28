@@ -584,8 +584,8 @@ const ChatInput = () => {
 
     multipleFileNewRoom.current.files.forEach((elem, id) => {
       if (id === 0) return;
-      if (elem.size / (1024 * 1024) <= 5) sendMessage({ fileMessage: elem });
-      else alert('file size should be less than 5MB');
+      if (elem.size / (1024 * 1024) <= 10) sendMessage({ fileMessage: elem });
+      else alert('file size should be less than 10MB');
     });
     multipleFileNewRoom.current = {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -620,14 +620,14 @@ const ChatInput = () => {
               onChange={(e) => {
                 if (selectedChat.chatRoomID)
                   Array.from(e.target.files).forEach((elem) => {
-                    if (elem.size / (1024 * 1024) <= 5)
+                    if (elem.size / (1024 * 1024) <= 10)
                       sendMessage({ fileMessage: elem });
-                    else alert(`file size should be less than 5MB`);
+                    else alert(`file size should be less than 10MB`);
                   });
                 else {
-                  if (e.target.files[0].size / (1024 * 1024) <= 5)
+                  if (e.target.files[0].size / (1024 * 1024) <= 10)
                     sendMessage({ fileMessage: e.target.files[0] });
-                  else alert('file size should be less than 5MB');
+                  else alert('file size should be less than 10MB');
                   multipleFileNewRoom.current = {
                     files: Array.from(e.target.files),
                   };
@@ -645,14 +645,14 @@ const ChatInput = () => {
               onChange={(e) => {
                 if (selectedChat.chatRoomID)
                   Array.from(e.target.files).forEach((elem) => {
-                    if (elem.size / (1024 * 1024) <= 5)
+                    if (elem.size / (1024 * 1024) <= 10)
                       sendMessage({ fileMessage: elem });
-                    else alert('file size should be less than 5MB');
+                    else alert('file size should be less than 10MB');
                   });
                 else {
-                  if (e.target.files[0].size / (1024 * 1024) <= 5)
+                  if (e.target.files[0].size / (1024 * 1024) <= 10)
                     sendMessage({ fileMessage: e.target.files[0] });
-                  else alert('file size should be less than 5MB');
+                  else alert('file size should be less than 10MB');
                   multipleFileNewRoom.current = {
                     files: Array.from(e.target.files),
                   };
