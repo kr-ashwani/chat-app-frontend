@@ -622,26 +622,15 @@ const ChatInput = () => {
               accept="video/*,image/*"
               multiple
               onChange={(e) => {
-                if (selectedChat.chatRoomID)
-                  Array.from(e.target.files).forEach((elem) => {
-                    if (
-                      elem.size / (1024 * 1024) <=
-                      process.env.REACT_APP_MAX_FILE_SIZE
-                    )
-                      sendMessage({ fileMessage: elem });
-                    else alert(`file size should be less than 10MB`);
-                  });
-                else {
-                  if (
-                    e.target.files[0].size / (1024 * 1024) <=
-                    process.env.REACT_APP_MAX_FILE_SIZE
-                  )
-                    sendMessage({ fileMessage: e.target.files[0] });
-                  else alert('file size should be less than 10MB');
-                  multipleFileNewRoom.current = {
-                    files: Array.from(e.target.files),
-                  };
-                }
+                if (
+                  e.target.files[0].size / (1024 * 1024) <=
+                  process.env.REACT_APP_MAX_FILE_SIZE
+                )
+                  sendMessage({ fileMessage: e.target.files[0] });
+                else alert('file size should be less than 10MB');
+                multipleFileNewRoom.current = {
+                  files: Array.from(e.target.files),
+                };
                 container.current.classList.remove('show');
               }}
             />
@@ -653,26 +642,15 @@ const ChatInput = () => {
               type="file"
               multiple
               onChange={(e) => {
-                if (selectedChat.chatRoomID)
-                  Array.from(e.target.files).forEach((elem) => {
-                    if (
-                      elem.size / (1024 * 1024) <=
-                      process.env.REACT_APP_MAX_FILE_SIZE
-                    )
-                      sendMessage({ fileMessage: elem });
-                    else alert('file size should be less than 10MB');
-                  });
-                else {
-                  if (
-                    e.target.files[0].size / (1024 * 1024) <=
-                    process.env.REACT_APP_MAX_FILE_SIZE
-                  )
-                    sendMessage({ fileMessage: e.target.files[0] });
-                  else alert('file size should be less than 10MB');
-                  multipleFileNewRoom.current = {
-                    files: Array.from(e.target.files),
-                  };
-                }
+                if (
+                  e.target.files[0].size / (1024 * 1024) <=
+                  process.env.REACT_APP_MAX_FILE_SIZE
+                )
+                  sendMessage({ fileMessage: e.target.files[0] });
+                else alert('file size should be less than 10MB');
+                multipleFileNewRoom.current = {
+                  files: Array.from(e.target.files),
+                };
                 container.current.classList.remove('show');
               }}
             />
