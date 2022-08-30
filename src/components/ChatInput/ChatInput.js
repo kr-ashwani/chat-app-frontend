@@ -107,7 +107,11 @@ const ChatInput = () => {
   }
 
   //message is sent to server and local message and chatRoom State is updated
-  function sendMessage({ msgType = null, fileMessage = null }) {
+  function sendMessage({
+    msgType = null,
+    fileMessage = null,
+    showFileInfo = null,
+  }) {
     if (!fileMessage) messageDiv.current.focus();
     if (!fileMessage)
       if (!message.length || (message.length && !message.trim().length)) {
@@ -136,7 +140,7 @@ const ChatInput = () => {
         : 'text',
       createdAt,
       updatedAt: createdAt,
-      showUserInfo: true,
+      showUserInfo: showFileInfo ? showFileInfo.show : true,
       messageID,
       chatRoomID: selectedChat.chatRoomID || uuid(),
       messageStatus: {
@@ -588,13 +592,37 @@ const ChatInput = () => {
 
     multipleFileNewRoom.current.files.forEach((elem, id) => {
       if (id === 0) return;
-      if (elem.size / (1024 * 1024) <= process.env.REACT_APP_MAX_FILE_SIZE)
-        sendMessage({ fileMessage: elem });
-      else alert('file size should be less than 10MB');
+      if (elem.size / (1024 * 1024) <= process.env.REACT_APP_MAX_FILE_SIZE) {
+        if (id === multipleFileNewRoom.current.files.length - 1)
+          sendMessage({ fileMessage: elem, showFileInfo: { show: true } });
+        else sendMessage({ fileMessage: elem, showFileInfo: { show: false } });
+      } else alert('file size should be less than 10MB');
     });
     multipleFileNewRoom.current = {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedChat, chatRoomMessages]);
+
+  function sendFileMessage(e) {
+    if (
+      e.target.files[0].size / (1024 * 1024) <=
+      process.env.REACT_APP_MAX_FILE_SIZE
+    )
+      if (Array.from(e.target.files).length === 1)
+        sendMessage({
+          fileMessage: e.target.files[0],
+          showFileInfo: { show: true },
+        });
+      else
+        sendMessage({
+          fileMessage: e.target.files[0],
+          showFileInfo: { show: false },
+        });
+    else alert('file size should be less than 10MB');
+    multipleFileNewRoom.current = {
+      files: Array.from(e.target.files),
+    };
+    container.current.classList.remove('show');
+  }
 
   return (
     <div className="chatInput">
@@ -612,48 +640,20 @@ const ChatInput = () => {
       </div>
       <div
         className="attachment"
-        onClick={(e) => {
-          container.current.classList.toggle('show');
-        }}>
+        onClick={() => container.current.classList.toggle('show')}>
         <div className="attachment-list" ref={container}>
           <div className="attachment-item">
             <input
               type="file"
               accept="video/*,image/*"
               multiple
-              onChange={(e) => {
-                if (
-                  e.target.files[0].size / (1024 * 1024) <=
-                  process.env.REACT_APP_MAX_FILE_SIZE
-                )
-                  sendMessage({ fileMessage: e.target.files[0] });
-                else alert('file size should be less than 10MB');
-                multipleFileNewRoom.current = {
-                  files: Array.from(e.target.files),
-                };
-                container.current.classList.remove('show');
-              }}
+              onChange={sendFileMessage}
             />
             <span className="material-icons">collections</span>
             <p>Photos and videos</p>
           </div>
           <div className="attachment-item">
-            <input
-              type="file"
-              multiple
-              onChange={(e) => {
-                if (
-                  e.target.files[0].size / (1024 * 1024) <=
-                  process.env.REACT_APP_MAX_FILE_SIZE
-                )
-                  sendMessage({ fileMessage: e.target.files[0] });
-                else alert('file size should be less than 10MB');
-                multipleFileNewRoom.current = {
-                  files: Array.from(e.target.files),
-                };
-                container.current.classList.remove('show');
-              }}
-            />
+            <input type="file" multiple onChange={sendFileMessage} />
             <span className="material-icons">description</span>
             <p>Documents</p>
           </div>

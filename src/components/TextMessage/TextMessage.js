@@ -34,6 +34,8 @@ const TextMessage = ({ message }) => {
   const replyDiv = useRef();
   const touchSelect = useRef(true);
 
+  const disableMessageSwipe = useRef(false);
+
   function replyToMessage(e, id) {
     if (e.target !== e.currentTarget) if (!id) return;
     replyDiv.current.classList.add('show');
@@ -74,6 +76,7 @@ const TextMessage = ({ message }) => {
   useEffect(() => {
     if (!msgDiv.current) return;
     let x = 0;
+    const chatList = document.getElementsByClassName('chatList')[0];
     msgDiv.current.addEventListener('touchstart', (e) => {
       const touch = e.targetTouches[0];
       x = touch.clientX;
@@ -85,6 +88,7 @@ const TextMessage = ({ message }) => {
       msgDiv.current.style.transition = `transform 300ms ease-in-out`;
       setTimeout(() => {
         msgDiv.current.style.transform = `translate3d(${0}px,0,0)`;
+        if (chatList) chatList.classList.remove('prevent-scrolling');
       }, 10);
 
       setTimeout(() => {
@@ -94,10 +98,12 @@ const TextMessage = ({ message }) => {
       x = touch.clientX;
     });
     msgDiv.current.addEventListener('touchmove', (e) => {
+      if (disableMessageSwipe.current) return;
       const touch = e.targetTouches[0];
       if (touch.clientX - x > 70) return;
       if (touch.clientX - x > 45)
         if (touchSelect.current) {
+          if (chatList) chatList.classList.add('prevent-scrolling');
           touchSelect.current = false;
           let path = e.path || (e.composedPath && e.composedPath());
           for (let i = 0; i < path.length; i++)
@@ -114,6 +120,21 @@ const TextMessage = ({ message }) => {
         }px,0,0)`;
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  //disable message swipe logic
+  useEffect(() => {
+    const chatList = document.getElementsByClassName('chatList')[0];
+    let timer = null;
+    if (chatList)
+      chatList.addEventListener('scroll', () => {
+        clearTimeout(timer);
+        disableMessageSwipe.current = true;
+        //maupulate time if you want
+        timer = setTimeout(() => {
+          disableMessageSwipe.current = false;
+        }, 300);
+      });
   }, []);
 
   return !extraInfo ? (
