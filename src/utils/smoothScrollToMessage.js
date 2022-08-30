@@ -1,6 +1,13 @@
 import { smoothScrollTo } from './smoothScroll';
 
 function smoothScrollToMessage(chatList, prevMsg) {
+  console.log(prevMsg);
+  console.log(
+    chatList.scrollTop,
+    prevMsg.offsetTop,
+    prevMsg.clientHeight,
+    chatList.clientHeight
+  );
   if (chatList.scrollTop > prevMsg.offsetTop) {
     if (prevMsg.clientHeight < chatList.clientHeight)
       smoothScrollTo({
