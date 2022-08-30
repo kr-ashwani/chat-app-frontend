@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import AuthRedirect from './auth/AuthRedirect';
@@ -12,8 +12,16 @@ import { SocketProvider } from './context/SocketContext';
 import { ChatRoomProvider } from './context/chatRoomContext';
 import AppLoading from './components/AppLoading/AppLoading';
 import { ChatRoomMessageProvider } from './context/chatRoomMessageContext';
+import iOS from './utils/checkForIOS';
 
 function App() {
+  useEffect(() => {
+    if (iOS()) {
+      document
+        .getElementsByTagName('body')[0]
+        .classList.add('iosPreventScroll');
+    }
+  }, []);
   return (
     <>
       <AppLoading />

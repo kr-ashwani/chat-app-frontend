@@ -22,6 +22,9 @@ body {
   height: 1px;
   min-height: calc(var(--vh, 1vh) * 100);
 }
+body.iosPreventScroll {
+  overflow: hidden;
+}
 
 #root {
   height: 100%;

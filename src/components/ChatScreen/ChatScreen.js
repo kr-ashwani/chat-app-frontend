@@ -8,6 +8,7 @@ import useReply from '../../hooks/useReply';
 import UserAvatar from '../UserAvatar/UserAvatar';
 import useMessage from './../../hooks/useChatRoomMessage';
 import { FileIcon, defaultStyles } from 'react-file-icon';
+import iOS from './../../utils/checkForIOS';
 
 const ChatScreen = () => {
   const { selectedChat } = useSelectedChat();
@@ -25,21 +26,6 @@ const ChatScreen = () => {
     if (selectedChat)
       document.getElementsByClassName('welcomeScreen')[0].classList.add('hide');
   }, [selectedChat]);
-
-  function iOS() {
-    return (
-      [
-        'iPad Simulator',
-        'iPhone Simulator',
-        'iPod Simulator',
-        'iPad',
-        'iPhone',
-        'iPod',
-      ].includes(navigator.platform) ||
-      // iPad on iOS 13 detection
-      (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
-    );
-  }
 
   useEffect(() => {
     const chatList = document.getElementsByClassName('chatList')[0];
