@@ -413,6 +413,7 @@ const ChatInput = () => {
           chatRoomID: null,
           senderName: '',
           senderPhotoUrl: '',
+          fileInfo: null,
         });
       }, 510);
     }

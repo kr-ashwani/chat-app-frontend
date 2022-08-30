@@ -2,6 +2,7 @@ import React from 'react';
 import { useAuth } from '../../context/AuthContext';
 import smoothScrollToMessage from '../../utils/smoothScrollToMessage';
 import UserAvatar from '../UserAvatar/UserAvatar';
+import { FileIcon, defaultStyles } from 'react-file-icon';
 import './ReplyMessage.css';
 
 const ReplyMessage = ({ repliedMessage }) => {
@@ -16,7 +17,7 @@ const ReplyMessage = ({ repliedMessage }) => {
 
   return (
     <div
-      className={`reply`}
+      className={`reply ${repliedMessage.fileInfo ? 'fileReply' : ''}`}
       data-message-id={repliedMessage.messageID}
       onClick={scrollBackToMessage}>
       <div className="replyUser">
@@ -31,9 +32,24 @@ const ReplyMessage = ({ repliedMessage }) => {
           </span>
         )}
       </div>
-      <div className="replyMsg">
-        <p>{repliedMessage.message}</p>
-      </div>
+      {repliedMessage.message ? (
+        <div className="replyMsg">
+          <p>{repliedMessage.message}</p>
+        </div>
+      ) : (
+        <div className="replyFileMsg2">
+          {repliedMessage.fileInfo.type.split('/')[0] === 'image' ? (
+            <img src={repliedMessage.fileInfo.url} alt="file" />
+          ) : (
+            <div className="icon">
+              <FileIcon
+                extension={repliedMessage.fileInfo.extension}
+                {...defaultStyles[repliedMessage.fileInfo.extension]}
+              />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

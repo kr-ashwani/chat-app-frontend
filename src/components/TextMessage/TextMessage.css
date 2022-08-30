@@ -119,7 +119,7 @@
 
 .fa-reply {
   position: absolute;
-  top: 20px;
+  top: calc(50% - 40px);
   opacity: 0;
   transform: translateX(-10px);
   transition: all 150ms ease-in-out;

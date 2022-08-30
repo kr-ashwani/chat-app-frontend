@@ -64,6 +64,24 @@
   gap: 5px;
   flex-direction: column;
 }
+.msgPreview.filePreview {
+  flex-direction: row;
+  justify-content: space-between;
+}
+.replyFileMsg {
+  height: 57px;
+}
+.replyFileMsg > img {
+  object-fit: cover;
+  border-radius: 10px;
+  /* width: 60px; */
+  height: 60px;
+  object-position: center center;
+}
+.replyFileMsg > .icon {
+  width: 40px;
+}
+
 .msgPreview > span:nth-child(1) {
   display: flex;
   align-items: center;

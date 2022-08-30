@@ -53,7 +53,9 @@ const TextMessage = ({ message }) => {
         messageID,
         chatRoomID,
         senderPhotoUrl,
+        fileInfo,
       } = chatRoomMessages[selectedChat.chatRoomID][msgID];
+
       setRepliedMessage((prev) => ({
         message,
         senderID,
@@ -62,6 +64,7 @@ const TextMessage = ({ message }) => {
         chatRoomID,
         senderPhotoUrl,
         messageID,
+        fileInfo,
       }));
 
       navigator.vibrate(200);

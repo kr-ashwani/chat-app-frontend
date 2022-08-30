@@ -21,9 +21,32 @@
 }
 .replyMsg {
   display: flex;
-  padding: 5px 0 0 5px;
+  padding: 5px 0 0 5px !important;
   color: #8696a0;
   color: #cacdcf;
+}
+.fileReply {
+  display: flex;
+  gap: 20px;
+}
+.replyFileMsg2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.replyFileMsg2 > .icon {
+  width: 32px;
+}
+
+.fileReply > .replyUser {
+  align-items: center;
+}
+.fileReply > .replyFileMsg2 > img {
+  height: 55px !important;
+  border-radius: 10px;
+}
+.fileReply > .replyUser span > p {
+  width: auto;
 }
 .replyMsg > p,
 .replyUser > span > p {

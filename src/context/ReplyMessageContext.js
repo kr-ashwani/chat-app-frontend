@@ -11,6 +11,7 @@ function ReplyMessageProvider({ children }) {
     chatRoomID: null,
     senderName: '',
     senderPhotoUrl: '',
+    fileInfo: null,
   });
 
   const value = {

@@ -7,6 +7,7 @@ import { useAuth } from '../../context/AuthContext';
 import useReply from '../../hooks/useReply';
 import UserAvatar from '../UserAvatar/UserAvatar';
 import useMessage from './../../hooks/useChatRoomMessage';
+import { FileIcon, defaultStyles } from 'react-file-icon';
 
 const ChatScreen = () => {
   const { selectedChat } = useSelectedChat();
@@ -206,11 +207,15 @@ const ChatScreen = () => {
         chatRoomID: null,
         senderName: '',
         senderPhotoUrl: '',
+        fileInfo: null,
       });
     }, 290);
   }
   useEffect(() => {
-    if (prevMsg.current === '' && repliedMessage.message) {
+    if (
+      prevMsg.current === '' &&
+      (repliedMessage.message || repliedMessage.fileInfo)
+    ) {
       document.getElementsByClassName('inputMessage')[0].focus();
       const chatList = document.getElementsByClassName('chatList')[0];
       const msgelem = document.getElementsByClassName('msgReplyPreview')[0];
@@ -224,8 +229,13 @@ const ChatScreen = () => {
       chatList.style.transform = `translateY(${-1 * contentHeight}px)`;
       msgelem.style.transform = 'translateY(-100%)';
     }
-    prevMsg.current = repliedMessage.message;
-  }, [repliedMessage.messageID, repliedMessage.message]);
+    prevMsg.current =
+      repliedMessage.message || (repliedMessage.fileInfo ? 'new File' : '');
+  }, [
+    repliedMessage.messageID,
+    repliedMessage.message,
+    repliedMessage.fileInfo,
+  ]);
 
   useEffect(() => {
     const chatList = document.getElementsByClassName('chatList')[0];
@@ -245,6 +255,7 @@ const ChatScreen = () => {
       chatRoomID: null,
       senderName: '',
       senderPhotoUrl: '',
+      fileInfo: null,
     });
   }, [selectedChat, setRepliedMessage]);
 
@@ -264,11 +275,14 @@ const ChatScreen = () => {
           )}
         </div>
         <div className="replyMessagePreview ">
-          {!repliedMessage.message ? (
+          {!(repliedMessage.message || repliedMessage.fileInfo) ? (
             <></>
           ) : (
             <div className="msgReplyPreview">
-              <div className="msgPreview">
+              <div
+                className={`msgPreview ${
+                  repliedMessage.fileInfo ? 'filePreview' : ''
+                }`}>
                 <span>
                   <UserAvatar
                     imgSrc={repliedMessage.senderPhotoUrl}
@@ -280,9 +294,24 @@ const ChatScreen = () => {
                       : repliedMessage.senderName}
                   </p>
                 </span>
-                <span className="repMsg">
-                  <p>{repliedMessage.message}</p>
-                </span>
+                {repliedMessage.message ? (
+                  <span className="replyMsg">
+                    <p>{repliedMessage.message}</p>
+                  </span>
+                ) : (
+                  <div className="replyFileMsg">
+                    {repliedMessage.fileInfo.type.split('/')[0] === 'image' ? (
+                      <img src={repliedMessage.fileInfo.url} alt="file" />
+                    ) : (
+                      <div className="icon">
+                        <FileIcon
+                          extension={repliedMessage.fileInfo.extension}
+                          {...defaultStyles[repliedMessage.fileInfo.extension]}
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
               <div className="closeReply" onClick={noReply}>
                 <svg
