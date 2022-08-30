@@ -221,7 +221,10 @@ const ChatInput = () => {
       else pendingMsg.current[selectedChat.chatRoomID].push(messageData);
 
       if (socket.connected) {
-        if (!messageData.fileInfo) {
+        if (
+          !messageData.fileInfo ||
+          msgInfoTime?.messageType === 'information'
+        ) {
           if (pendingMsg.current[selectedChat.chatRoomID].length === 1) {
             socket.emit('online:message', {
               messageData: pendingMsg.current[selectedChat.chatRoomID][0],
