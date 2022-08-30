@@ -74,6 +74,7 @@ const GroupInfo = ({ setSlideInfo, selectedUser, setSelectedUser }) => {
           <div className="grp-subject-input">
             <input
               type="text"
+              placeholder=" Enter group name"
               value={groupSubject}
               onChange={(e) => {
                 if (e.target.value.length > 24) return;
