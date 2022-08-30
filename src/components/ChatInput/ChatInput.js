@@ -594,7 +594,7 @@ const ChatInput = () => {
     });
     multipleFileNewRoom.current = {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedChat]);
+  }, [selectedChat, chatRoomMessages]);
 
   return (
     <div className="chatInput">
