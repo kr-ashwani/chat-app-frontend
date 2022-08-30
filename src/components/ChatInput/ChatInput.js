@@ -584,7 +584,8 @@ const ChatInput = () => {
 
     multipleFileNewRoom.current.files.forEach((elem, id) => {
       if (id === 0) return;
-      if (elem.size / (1024 * 1024) <= 10) sendMessage({ fileMessage: elem });
+      if (elem.size / (1024 * 1024) <= process.env.REACT_APP_MAX_FILE_SIZE)
+        sendMessage({ fileMessage: elem });
       else alert('file size should be less than 10MB');
     });
     multipleFileNewRoom.current = {};
@@ -605,7 +606,6 @@ const ChatInput = () => {
           }}></i>
         <emoji-picker ref={emojiPicker} className="emojiHide"></emoji-picker>
       </div>
-
       <div
         className="attachment"
         onClick={(e) => {
@@ -620,12 +620,18 @@ const ChatInput = () => {
               onChange={(e) => {
                 if (selectedChat.chatRoomID)
                   Array.from(e.target.files).forEach((elem) => {
-                    if (elem.size / (1024 * 1024) <= 10)
+                    if (
+                      elem.size / (1024 * 1024) <=
+                      process.env.REACT_APP_MAX_FILE_SIZE
+                    )
                       sendMessage({ fileMessage: elem });
                     else alert(`file size should be less than 10MB`);
                   });
                 else {
-                  if (e.target.files[0].size / (1024 * 1024) <= 10)
+                  if (
+                    e.target.files[0].size / (1024 * 1024) <=
+                    process.env.REACT_APP_MAX_FILE_SIZE
+                  )
                     sendMessage({ fileMessage: e.target.files[0] });
                   else alert('file size should be less than 10MB');
                   multipleFileNewRoom.current = {
@@ -645,12 +651,18 @@ const ChatInput = () => {
               onChange={(e) => {
                 if (selectedChat.chatRoomID)
                   Array.from(e.target.files).forEach((elem) => {
-                    if (elem.size / (1024 * 1024) <= 10)
+                    if (
+                      elem.size / (1024 * 1024) <=
+                      process.env.REACT_APP_MAX_FILE_SIZE
+                    )
                       sendMessage({ fileMessage: elem });
                     else alert('file size should be less than 10MB');
                   });
                 else {
-                  if (e.target.files[0].size / (1024 * 1024) <= 10)
+                  if (
+                    e.target.files[0].size / (1024 * 1024) <=
+                    process.env.REACT_APP_MAX_FILE_SIZE
+                  )
                     sendMessage({ fileMessage: e.target.files[0] });
                   else alert('file size should be less than 10MB');
                   multipleFileNewRoom.current = {
