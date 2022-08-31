@@ -1,10 +1,8 @@
-function getBlobUrl({ url, setBlobUrl }) {
-  fetch(url)
-    .then((response) => response.blob())
-    .then((blob) => {
-      const blobURL = URL.createObjectURL(blob);
-      setBlobUrl(blobURL);
-    });
+async function getBlobUrl({ url, setBlobUrl }) {
+  const response = await fetch(url);
+  const responseBlob = await response.blob();
+  const blobURL = URL.createObjectURL(responseBlob);
+  setBlobUrl(blobURL);
 }
 
 export default getBlobUrl;

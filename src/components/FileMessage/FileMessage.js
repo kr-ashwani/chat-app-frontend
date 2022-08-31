@@ -6,6 +6,7 @@ import getBlobUrl from '../../utils/getBlobUrl';
 import { useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import getFileSize from './../../utils/getFileSize';
+import iOS from './../../utils/checkForIOS';
 
 const FileMessage = ({ message }) => {
   const fileType = message.fileInfo.type.split('/')[0];
@@ -100,9 +101,18 @@ const FileMessage = ({ message }) => {
               </div>
               <div className="fileDownload">
                 <span className="material-icons"> file_download </span>
-                <a href={blobUrl} download={message.fileInfo.fileName}>
-                  D
-                </a>
+                {iOS() ? (
+                  <a
+                    href={message.fileInfo.url}
+                    target="_blank"
+                    rel={'noreferrer'}>
+                    O
+                  </a>
+                ) : (
+                  <a href={blobUrl} download={message.fileInfo.fileName}>
+                    D
+                  </a>
+                )}
               </div>
             </>
           ) : (
