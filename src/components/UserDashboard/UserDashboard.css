@@ -38,12 +38,13 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   row-gap: 15px;
-  column-gap: 50px;
+  column-gap: 40px;
   /* width: 400px; */
   width: 100%;
   max-width: 9000px;
   transition: color 200ms ease-in-out;
   margin-bottom: 20px;
+  padding: 0 15px 0;
 }
 .userDetail > * {
   display: flex;
@@ -72,6 +73,31 @@
 .userAvatar {
   cursor: pointer;
 }
+.preventEmailOverflow {
+  overflow: auto;
+}
+
+.preventEmailOverflow::-webkit-scrollbar {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: 2px;
+  scrollbar-color: #373f44;
+}
+
+.preventEmailOverflow::-webkit-scrollbar {
+  height: 5px;
+}
+
+.preventEmailOverflow::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.preventEmailOverflow::-webkit-scrollbar-thumb {
+  background-color: #373f44;
+  border-radius: 10px;
+
+  /* outline: 1px solid slategrey; */
+}
+
 @keyframes userCard {
   0% {
     transform: translateY(-80px);

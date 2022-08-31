@@ -74,7 +74,7 @@ const UserDashboard = ({ setSlideInfo }) => {
           />
 
           <p className="infoTitle">Email address</p>
-          <p>{currentUser.email}</p>
+          <p className="preventEmailOverflow">{currentUser.email}</p>
 
           <p className="infoTitle">Last Signed in</p>
           <p>
