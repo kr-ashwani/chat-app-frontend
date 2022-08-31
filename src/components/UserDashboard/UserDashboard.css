@@ -111,7 +111,7 @@
 @media screen and (max-width: 600px) {
   .userDetail {
     column-gap: 30px;
-    padding: 15px;
+    padding: 20px;
   }
 }
 
