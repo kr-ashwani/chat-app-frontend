@@ -101,9 +101,11 @@ const TextMessage = ({ message }) => {
       if (disableMessageSwipe.current) return;
       const touch = e.targetTouches[0];
       if (touch.clientX - x > 70) return;
+      if (touch.clientX - x > 10)
+        if (chatList) chatList.classList.add('prevent-scrolling');
+
       if (touch.clientX - x > 45)
         if (touchSelect.current) {
-          if (chatList) chatList.classList.add('prevent-scrolling');
           touchSelect.current = false;
           let path = e.path || (e.composedPath && e.composedPath());
           for (let i = 0; i < path.length; i++)
