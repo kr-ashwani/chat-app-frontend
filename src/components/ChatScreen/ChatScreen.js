@@ -286,7 +286,8 @@ const ChatScreen = () => {
                   </span>
                 ) : (
                   <div className="replyFileMsg">
-                    {repliedMessage.fileInfo.inputType === 'photos/videos' ? (
+                    {repliedMessage.fileInfo.inputType === 'photos/videos' &&
+                    repliedMessage.fileInfo.type.split('/')[0] === 'image' ? (
                       <img src={repliedMessage.fileInfo.url} alt="file" />
                     ) : (
                       <div className="icon">
