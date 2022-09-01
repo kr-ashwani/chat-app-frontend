@@ -643,7 +643,7 @@ const ChatInput = () => {
     const files = Array.from(e.target.files);
     files.inputType = e.inputType;
     fileChangeRef.current = true;
-    optimizeFile(files, setOptimizedFiles, 600, 600, 1);
+    optimizeFile(files, setOptimizedFiles, 900, 900, 0.85);
   }
 
   return (
