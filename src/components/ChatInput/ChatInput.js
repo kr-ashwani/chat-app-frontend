@@ -8,6 +8,7 @@ import { v4 as uuid } from 'uuid';
 import useReply from '../../hooks/useReply';
 import useMessage from './../../hooks/useChatRoomMessage';
 import uploadFile from './../../utils/uploadFile';
+import optimizeFile from './../../utils/imageOptimize';
 
 const ChatInput = () => {
   const { currentUser } = useAuth();
@@ -22,6 +23,9 @@ const ChatInput = () => {
   const { newGroupChatInfo, setNewGroupChatInfo } = useChatRoom();
   const createNewGroupChat = useRef(false);
   const scrollMsg = useRef(0);
+
+  const [optimizedFiles, setOptimizedFiles] = useState([]);
+  const fileChangeRef = useRef(false);
 
   const { selectedChat, setSelectedChat } = useSelectedChat();
   const { socket } = useSocket();
@@ -155,12 +159,13 @@ const ChatInput = () => {
             fileName: fileMessage.name,
             size: fileMessage.size,
             type: fileMessage.type,
+            inputType: fileMessage.inputType,
             url: '',
             extension: fileMessage.name.split('.').pop(),
           }
         : null,
       fileProgressInfo: fileMessage
-        ? ['video', 'image'].includes(fileMessage.type.split('/')[0])
+        ? fileMessage.inputType === 'photos/videos'
           ? null
           : {
               loaded: 0,
@@ -603,25 +608,42 @@ const ChatInput = () => {
   }, [selectedChat, chatRoomMessages]);
 
   function sendFileMessage(e) {
-    if (
-      e.target.files[0].size / (1024 * 1024) <=
-      process.env.REACT_APP_MAX_FILE_SIZE
-    )
-      if (Array.from(e.target.files).length === 1)
+    //e must be array of files or input onChnage events only
+    const files = e?.target?.files ? Array.from(e.target.files) : e;
+
+    files.forEach((elem) => (elem.inputType = e.inputType));
+
+    console.log(files);
+    if (files[0].size / (1024 * 1024) <= process.env.REACT_APP_MAX_FILE_SIZE)
+      if (files.length === 1)
         sendMessage({
-          fileMessage: e.target.files[0],
+          fileMessage: files[0],
           showFileInfo: { show: true },
         });
       else
         sendMessage({
-          fileMessage: e.target.files[0],
+          fileMessage: files[0],
           showFileInfo: { show: false },
         });
     else alert('file size should be less than 10MB');
     multipleFileNewRoom.current = {
-      files: Array.from(e.target.files),
+      files,
     };
     container.current.classList.remove('show');
+  }
+
+  useEffect(() => {
+    if (!fileChangeRef.current) return;
+    sendFileMessage(optimizedFiles);
+    fileChangeRef.current = false;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [optimizedFiles]);
+
+  function getOptimizedfiles(e) {
+    const files = Array.from(e.target.files);
+    files.inputType = e.inputType;
+    fileChangeRef.current = true;
+    optimizeFile(files, setOptimizedFiles, 600, 600, 1);
   }
 
   return (
@@ -647,13 +669,23 @@ const ChatInput = () => {
               type="file"
               accept="video/*,image/*"
               multiple
-              onChange={sendFileMessage}
+              onChange={(e) => {
+                e.inputType = 'photos/videos';
+                getOptimizedfiles(e);
+              }}
             />
             <span className="material-icons">collections</span>
             <p>Photos and videos</p>
           </div>
           <div className="attachment-item">
-            <input type="file" multiple onChange={sendFileMessage} />
+            <input
+              type="file"
+              multiple
+              onChange={(e) => {
+                e.inputType = 'documents';
+                sendFileMessage(e);
+              }}
+            />
             <span className="material-icons">description</span>
             <p>Documents</p>
           </div>

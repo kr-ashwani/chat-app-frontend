@@ -12,6 +12,8 @@ const FileMessage = ({ message }) => {
   const fileType = message.fileInfo.type.split('/')[0];
   const [blobUrl, setBlobUrl] = useState('');
 
+  const inputType = message.fileInfo.inputType;
+
   useEffect(() => {
     if (!message.fileInfo.url) return;
     if (['video', 'image'].includes(message.fileInfo.type.split('/')[0]))
@@ -20,7 +22,7 @@ const FileMessage = ({ message }) => {
       getBlobUrl({ url: message.fileInfo.url, setBlobUrl });
   }, [message.fileInfo.url, message.fileInfo.type]);
 
-  if (fileType === 'image') {
+  if (inputType === 'photos/videos' && fileType === 'image') {
     return (
       <div className="msgFile photoCover">
         <div className="msgPhoto">
@@ -35,7 +37,7 @@ const FileMessage = ({ message }) => {
         <div className="msgPhotoInfo">{message.message}</div>
       </div>
     );
-  } else if (fileType === 'video') {
+  } else if (inputType === 'photos/videos' && fileType === 'video') {
     return (
       <div className="msgFile videoCover">
         <div className="msgVideo">

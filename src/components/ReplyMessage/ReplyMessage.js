@@ -38,7 +38,7 @@ const ReplyMessage = ({ repliedMessage }) => {
         </div>
       ) : (
         <div className="replyFileMsg2">
-          {repliedMessage.fileInfo.type.split('/')[0] === 'image' ? (
+          {repliedMessage.fileInfo.inputType === 'photos/videos' ? (
             <img src={repliedMessage.fileInfo.url} alt="file" />
           ) : (
             <div className="icon">

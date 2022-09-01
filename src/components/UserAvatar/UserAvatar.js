@@ -1,8 +1,9 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import './UserAvatar.css';
 import defaultAvatar from '../../assets/3dAvatar.png';
 import uploadFile from '../../utils/uploadFile';
 import { CircularProgress } from '@mui/material';
+import optimizeFile from '../../utils/imageOptimize';
 
 const UserAvatar = ({
   imgSrc,
@@ -12,8 +13,24 @@ const UserAvatar = ({
   changeAvatarInfo = {},
   fileUploadedCb,
 }) => {
+  const [optimizedFiles, setOptimizedFiles] = useState();
+  const fileChangeRef = useRef(false);
+
   const fileRef = useRef();
   const loaderRef = useRef();
+
+  useEffect(() => {
+    if (!fileChangeRef.current) return;
+    uploadFile(optimizedFiles[0], fileUploadedCb, loaderRef.current);
+    fileChangeRef.current = false;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [optimizedFiles]);
+
+  const msg = changeAvatarInfo.message
+    ? changeAvatarInfo.message.split(' ')
+    : [''];
+  msg.shift();
+
   function errorImage(e) {
     e.target.src = defaultAvatar;
     e.target.onerror = '';
@@ -21,11 +38,6 @@ const UserAvatar = ({
   function selectFile(e) {
     if (fileRef.current) fileRef.current.click();
   }
-
-  const msg = changeAvatarInfo.message
-    ? changeAvatarInfo.message.split(' ')
-    : [''];
-  msg.shift();
   return (
     <div
       onClick={() => {
@@ -45,7 +57,8 @@ const UserAvatar = ({
             style={{ display: 'none' }}
             onChange={(e) => {
               loaderRef.current.classList.add('show');
-              uploadFile(e, fileUploadedCb, loaderRef.current);
+              fileChangeRef.current = true;
+              optimizeFile([e.target.files[0]], setOptimizedFiles, 400, 400, 1);
             }}
           />
           <span data-testid="camera" data-icon="camera" onClick={selectFile}>
