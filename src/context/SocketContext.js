@@ -18,7 +18,7 @@ function SocketProvider({ children }) {
   const { currentUser } = useAuth();
 
   useEffect(() => {
-    if (!currentUser) return;
+    if (!currentUser?._id) return;
     setSocket(
       io.connect(process.env.REACT_APP_SERVER_ENDPOINT, {
         withCredentials: true,
@@ -28,7 +28,7 @@ function SocketProvider({ children }) {
         },
       })
     );
-  }, [currentUser]);
+  }, [currentUser._id]);
 
   const value = {
     socket,

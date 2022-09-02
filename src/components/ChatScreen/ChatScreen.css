@@ -31,7 +31,10 @@
 
   /* outline: 1px solid slategrey; */
 }
+/* added positon relative */
 .viewChat {
+  position: relative;
+
   display: flex;
   flex-direction: column;
   justify-content: flex-end;

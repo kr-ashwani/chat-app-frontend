@@ -8,15 +8,17 @@ import { useSocket } from '../../context/SocketContext';
 import './Chat.css';
 
 function Chat() {
-  const { currentUser } = useAuth();
+  // const { currentUser } = useAuth();
 
   const { socket } = useSocket();
 
+  //made change currentUser was included in DependencyArray
   useEffect(() => {
     if (!socket.auth) return;
     if (socket.auth.userID) socket.connect();
+
     return () => socket.disconnect();
-  }, [socket, currentUser]);
+  }, [socket]);
 
   return (
     <>

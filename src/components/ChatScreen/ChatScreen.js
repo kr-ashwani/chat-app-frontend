@@ -9,6 +9,7 @@ import UserAvatar from '../UserAvatar/UserAvatar';
 import useMessage from './../../hooks/useChatRoomMessage';
 import { FileIcon, defaultStyles } from 'react-file-icon';
 import iOS from './../../utils/checkForIOS';
+import SocketStatus from '../SocketStatus/SocketStatus';
 
 const ChatScreen = () => {
   const { selectedChat } = useSelectedChat();
@@ -248,6 +249,7 @@ const ChatScreen = () => {
   return (
     <>
       <div className="viewChat">
+        <SocketStatus />
         <div className="chatList">
           <div className="initialSpace"></div>
           {chatRoomMessages[selectedChat?.chatRoomID] ? (

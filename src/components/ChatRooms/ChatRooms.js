@@ -9,6 +9,7 @@ import { useAuth } from '../../context/AuthContext';
 import ChatRoomsList from '../ChatRoomsList/ChatRoomsList';
 import StackSlide from '../StackSlide/StackSlide';
 import UserDashboard from '../UserDashboard/UserDashboard';
+import SocketStatus from './../SocketStatus/SocketStatus';
 
 const ChatGroup = () => {
   const { chatRooms, setChatRooms } = useChatRoom();
@@ -122,6 +123,7 @@ const ChatGroup = () => {
 
   return (
     <div className={`chatGroup`}>
+      <SocketStatus />
       <StackSlide
         slideInfo={slideInfo}
         mainContentStyle={{ display: 'flex', flexDirection: 'column' }}>

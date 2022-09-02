@@ -35,6 +35,8 @@ const ChatInput = () => {
   const { setRepliedMessage, repliedMessage } = useReply();
 
   const multipleFileNewRoom = useRef({});
+  const pendingFilesUpload = useRef([]);
+  const socketStatus = useRef('');
 
   //emoji pick logic
   useEffect(() => {
@@ -643,8 +645,24 @@ const ChatInput = () => {
     const files = Array.from(e.target.files);
     files.inputType = e.inputType;
     fileChangeRef.current = true;
-    optimizeFile(files, setOptimizedFiles, 900, 900, 0.85);
+    optimizeFile(files, setOptimizedFiles, 1000, 1000, 0.85);
   }
+
+  socket.on('disconnect', () => {
+    socketStatus.current = 'socketDisconnected';
+  });
+
+  useEffect(() => {
+    function checkSocketStatus() {
+      if (socketStatus.current === 'socketDisconnected') {
+        if (!pendingFilesUpload.current.length) return;
+        //
+      }
+      socketStatus.current = '';
+    }
+    socket.on('message:sync', checkSocketStatus);
+    return () => socket.off('message:sync', checkSocketStatus);
+  }, [socket, currentUser]);
 
   return (
     <div className="chatInput">
