@@ -1,3 +1,5 @@
+import byteSize from 'byte-size';
+
 const uploadFile = async (
   e,
   uploadCb,
@@ -39,18 +41,9 @@ const uploadFile = async (
     progressInfo.fileID = fileID[i];
     function uploadProgress(e) {
       let bytesSent = e.loaded - prevSentBytes;
-      if (Math.round(bytesSent / (1024 * 1024 * 1024))) {
-        bytesSent = bytesSent / (1024 * 1024 * 1024);
-        progressInfo.rateUnit = 'GB/s';
-      } else if (Math.round(bytesSent / (1024 * 1024))) {
-        bytesSent = bytesSent / (1024 * 1024);
-        progressInfo.rateUnit = 'MB/s';
-      } else if (Math.round(bytesSent / 1024)) {
-        bytesSent = bytesSent / 1024;
-        progressInfo.rateUnit = 'KB/s';
-      } else {
-        progressInfo.rateUnit = 'B/s';
-      }
+      
+      const byteInfo=byteSize(bytesSent);
+      progressInfo.rateUnit = `${byteInfo.unit}/s`;
 
       progressInfo.loaded = e.loaded;
       progressInfo.total = e.total;
@@ -59,7 +52,7 @@ const uploadFile = async (
       const time = (Date.now() - timeDiff) / 1000;
 
       if (time !== 0) {
-        progressInfo.rate = bytesSent / time;
+        progressInfo.rate = byteInfo.value / time;
         if (typeof progressCb === 'function') progressCb(progressInfo);
       }
       prevSentBytes = e.loaded;

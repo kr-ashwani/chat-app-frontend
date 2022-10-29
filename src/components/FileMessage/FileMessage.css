@@ -127,7 +127,7 @@
   height: 100%;
 }
 .fileLoadingStats {
-  padding: 0 0 0 10px;
+  margin-left: 10px;
   display: flex;
   gap: 10px;
   font-size: 0.85rem;
@@ -137,7 +137,12 @@
   /* overflow: hidden; */
   text-align: center;
   font-size: 0.7rem;
-  width: 40px;
+}
+.fileLoadingStats > p{
+  white-space: nowrap;
+}
+.fileLoadingStats > p:nth-child(2){
+  overflow: auto;
 }
 
 @media only screen and(min-width:700px) {

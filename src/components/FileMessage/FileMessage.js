@@ -5,8 +5,8 @@ import { useEffect } from 'react';
 import getBlobUrl from '../../utils/getBlobUrl';
 import { useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
-import getFileSize from './../../utils/getFileSize';
 import iOS from './../../utils/checkForIOS';
+import byteSize from 'byte-size';
 
 const FileMessage = ({ message }) => {
   const fileType = message.fileInfo.type.split('/')[0];
@@ -22,7 +22,14 @@ const FileMessage = ({ message }) => {
       getBlobUrl({ url: message.fileInfo.url, setBlobUrl });
   }, [message.fileInfo.url, message.fileInfo.type]);
 
-  if (inputType === 'photos/videos' && fileType === 'image') {
+  function getFileSize(byte,options={}){
+    const byteInfo=byteSize(byte,options);
+     return `${byteInfo.value} ${byteInfo.unit}`
+  }
+
+
+  if (inputType === 'photos/videos'
+   && fileType === 'image') {
     return (
       <div className="msgFile photoCover">
         <div className="msgPhoto">
@@ -73,12 +80,12 @@ const FileMessage = ({ message }) => {
                 <p>
                   <span>
                     {'100mb' &&
-                      getFileSize(message.fileProgressInfo.loaded, 'roundOff')}
+                      getFileSize(message.fileProgressInfo.loaded)}
                   </span>
                   /
                   <span>
                     {'100mb' &&
-                      getFileSize(message.fileProgressInfo.total, 'roundOff')}
+                      getFileSize(message.fileProgressInfo.total)}
                   </span>
                 </p>
                 <p>
