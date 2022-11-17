@@ -129,6 +129,8 @@ const ChatInput = () => {
     if (!selectedChat) return;
     console.log('message sent : ', message);
 
+    console.log(fileMessage);
+
     const messageID = uuid();
     // const chatRoomID = uuid();
     const createdAt = new Date().getTime();
@@ -164,6 +166,9 @@ const ChatInput = () => {
             inputType: fileMessage.inputType,
             url: '',
             extension: fileMessage.name.split('.').pop(),
+            dimensions: fileMessage?.dimensions
+              ? fileMessage?.dimensions
+              : null,
           }
         : null,
       fileProgressInfo: fileMessage
@@ -611,11 +616,11 @@ const ChatInput = () => {
 
   function sendFileMessage(e) {
     //e must be array of files or input onChnage events only
-    const files = e?.target?.files ? Array.from(e.target.files) : e;
+    const files = Array.from(e?.target?.files ? Array.from(e.target.files) : e);
 
+    if (!files.length) return;
     files.forEach((elem) => (elem.inputType = e.inputType));
 
-    console.log(files);
     if (files[0].size / (1024 * 1024) <= process.env.REACT_APP_MAX_FILE_SIZE)
       if (files.length === 1)
         sendMessage({
@@ -645,6 +650,7 @@ const ChatInput = () => {
     const files = Array.from(e.target.files);
     files.inputType = e.inputType;
     fileChangeRef.current = true;
+
     optimizeFile(files, setOptimizedFiles, 1000, 1000, 0.85);
   }
 

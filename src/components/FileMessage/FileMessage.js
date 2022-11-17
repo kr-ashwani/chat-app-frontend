@@ -25,9 +25,18 @@ const FileMessage = ({ message }) => {
   if (inputType === 'photos/videos' && fileType === 'image') {
     return (
       <div className="msgFile photoCover">
-        <div className="msgPhoto">
+        <div
+          className="msgPhoto"
+          style={{
+            width: message.fileInfo.dimensions?.width,
+            height: message.fileInfo.dimensions?.height,
+          }}>
           {message.fileInfo.url ? (
-            <img src={message.fileInfo.url} alt="message" />
+            <img
+              src={message.fileInfo.url}
+              alt="message"
+              style={{ width: message.fileInfo.dimensions?.width }}
+            />
           ) : (
             <div className="fileImgLoading">
               <CircularProgress size="50px" />
