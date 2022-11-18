@@ -52,7 +52,7 @@ const FileMessage = ({ message }) => {
         <div
           className="msgVideo"
           style={{
-            height: message.fileInfo.dimensions?.height + 25,
+            height: message.fileInfo.dimensions?.height + 20,
           }}>
           {message.fileInfo.url ? (
             <video src={message.fileInfo.url} controls></video>
