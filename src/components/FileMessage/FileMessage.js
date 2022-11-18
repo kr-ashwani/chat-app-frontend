@@ -38,7 +38,12 @@ const FileMessage = ({ message }) => {
               style={{ width: message.fileInfo.dimensions?.width }}
             />
           ) : (
-            <div className="fileImgLoading">
+            <div
+              className="fileImgLoading"
+              style={{
+                width: message.fileInfo.dimensions?.width,
+                height: message.fileInfo.dimensions?.height,
+              }}>
               <CircularProgress size="50px" />
             </div>
           )}
@@ -57,7 +62,12 @@ const FileMessage = ({ message }) => {
           {message.fileInfo.url ? (
             <video src={message.fileInfo.url} controls></video>
           ) : (
-            <div className="fileVideoLoading">
+            <div
+              className="fileVideoLoading"
+              style={{
+                width: message.fileInfo.dimensions?.width,
+                height: message.fileInfo.dimensions?.height,
+              }}>
               <CircularProgress size="50px" />
             </div>
           )}
