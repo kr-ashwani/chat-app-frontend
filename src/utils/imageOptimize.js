@@ -1,7 +1,7 @@
 const MAXFrameWidth = 300;
 const MAXFrameHeight = 700;
 
-function optimizeFile(
+async function optimizeFile(
   inputFiles,
   setCompressedFiles,
   imageWidth = 1024,
@@ -19,6 +19,16 @@ function optimizeFile(
     if (inputFiles[j].type.split('/')[0] === 'image') continue;
     optimizedFiles[j] = inputFiles[j];
     count++;
+    if (inputFiles[j].type.split('/')[0] === 'video') {
+      const { width, height } = await getVideoDimensions(inputFiles[j]);
+
+      const [frameWidth, frameHeight] = calculateFrameSize(
+        { width, height },
+        MAXFrameWidth,
+        MAXFrameHeight
+      );
+      optimizedFiles[j].dimensions = { width: frameWidth, height: frameHeight };
+    }
   }
 
   //only videos
@@ -107,5 +117,19 @@ function calculateFrameSize(img, maxWidth, maxHeight) {
   if (width1 <= maxWidth && height1 <= maxHeight) return [width1, height1];
   else if (width2 <= maxWidth && height2 <= maxHeight) return [width2, height2];
 }
+
+const getVideoDimensions = (videoFile) => {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(videoFile);
+    const videoTag = document.createElement('video');
+    videoTag.src = url;
+    videoTag.addEventListener('loadedmetadata', function () {
+      resolve({ width: this.videoWidth, height: this.videoHeight });
+    });
+    videoTag.addEventListener('error', function () {
+      reject('failed to load video');
+    });
+  });
+};
 
 export default optimizeFile;

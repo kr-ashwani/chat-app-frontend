@@ -49,7 +49,11 @@ const FileMessage = ({ message }) => {
   } else if (inputType === 'photos/videos' && fileType === 'video') {
     return (
       <div className="msgFile videoCover">
-        <div className="msgVideo">
+        <div
+          className="msgVideo"
+          style={{
+            height: message.fileInfo.dimensions?.height + 10,
+          }}>
           {message.fileInfo.url ? (
             <video src={message.fileInfo.url} controls></video>
           ) : (
