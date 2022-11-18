@@ -71,7 +71,7 @@
 .msgVideo {
   padding-bottom: 10px;
   border-radius: 10px;
-  min-height: 180px;
+  min-height: 200px;
 }
 .msgVideo > video {
   width: 300px;
