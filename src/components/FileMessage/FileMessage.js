@@ -32,11 +32,25 @@ const FileMessage = ({ message }) => {
    && fileType === 'image') {
     return (
       <div className="msgFile photoCover">
-        <div className="msgPhoto">
+        <div
+          className="msgPhoto"
+          style={{
+            width: message.fileInfo.dimensions?.width,
+            height: message.fileInfo.dimensions?.height,
+          }}>
           {message.fileInfo.url ? (
-            <img src={message.fileInfo.url} alt="message" />
+            <img
+              src={message.fileInfo.url}
+              alt="message"
+              style={{ width: message.fileInfo.dimensions?.width }}
+            />
           ) : (
-            <div className="fileImgLoading">
+            <div
+              className="fileImgLoading"
+              style={{
+                width: message.fileInfo.dimensions?.width,
+                height: message.fileInfo.dimensions?.height,
+              }}>
               <CircularProgress size="50px" />
             </div>
           )}
@@ -47,11 +61,20 @@ const FileMessage = ({ message }) => {
   } else if (inputType === 'photos/videos' && fileType === 'video') {
     return (
       <div className="msgFile videoCover">
-        <div className="msgVideo">
+        <div
+          className="msgVideo"
+          style={{
+            height: message.fileInfo.dimensions?.height + 20,
+          }}>
           {message.fileInfo.url ? (
             <video src={message.fileInfo.url} controls></video>
           ) : (
-            <div className="fileVideoLoading">
+            <div
+              className="fileVideoLoading"
+              style={{
+                width: message.fileInfo.dimensions?.width,
+                height: message.fileInfo.dimensions?.height,
+              }}>
               <CircularProgress size="50px" />
             </div>
           )}

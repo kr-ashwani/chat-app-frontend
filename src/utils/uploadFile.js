@@ -65,4 +65,18 @@ const uploadFile = async (
   }
 };
 
+const getVideoDimensions = (videoFile) => {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(videoFile);
+    const videoTag = document.createElement('video');
+    videoTag.src = url;
+    videoTag.addEventListener('loadedmetadata', function () {
+      resolve({ width: this.videoWidth, height: this.videoHeight });
+    });
+    videoTag.addEventListener('error', function () {
+      reject('failed to load video');
+    });
+  });
+};
+
 export default uploadFile;

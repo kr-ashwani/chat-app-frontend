@@ -1,4 +1,7 @@
-function optimizeFile(
+const MAXFrameWidth = 300;
+const MAXFrameHeight = 700;
+
+async function optimizeFile(
   inputFiles,
   setCompressedFiles,
   imageWidth = 1024,
@@ -10,27 +13,38 @@ function optimizeFile(
   console.log(inputFiles.inputType);
   optimizedFiles.inputType = inputFiles.inputType;
 
+  let count = 0;
+
   for (let j = 0; j < inputFiles.length; j++) {
     if (inputFiles[j].type.split('/')[0] === 'image') continue;
     optimizedFiles[j] = inputFiles[j];
+    count++;
+    if (inputFiles[j].type.split('/')[0] === 'video') {
+      const { width, height } = await getVideoDimensions(inputFiles[j]);
+
+      const [frameWidth, frameHeight] = calculateFrameSize(
+        { width, height },
+        MAXFrameWidth,
+        MAXFrameHeight
+      );
+      optimizedFiles[j].dimensions = { width: frameWidth, height: frameHeight };
+    }
   }
 
-  let count = 0;
+  //only videos
+  if (count === inputFiles.length) return setCompressedFiles(optimizedFiles);
 
   const files = inputFiles; // get the file
   if (!inputFiles.length) return;
 
   for (let i = 0; i < inputFiles.length; i++) {
-    if (inputFiles[i].type.split('/')[0] !== 'image') {
-      count++;
-      continue;
-    }
+    if (inputFiles[i].type.split('/')[0] !== 'image') continue;
+
     const blobURL = URL.createObjectURL(files[i]);
     const img = new Image();
     img.src = blobURL;
     img.onerror = function () {
       URL.revokeObjectURL(this.src);
-      // Handle the failure properly
       console.log('Cannot load image');
     };
 
@@ -50,6 +64,13 @@ function optimizeFile(
             type: blob.type,
           });
 
+          const [frameWidth, frameHeight] = calculateFrameSize(
+            { width: newWidth, height: newHeight },
+            MAXFrameWidth,
+            MAXFrameHeight
+          );
+
+          myFile.dimensions = { width: frameWidth, height: frameHeight };
           count++;
           //file is compressed and state of component(that called this function) is updated to compressed blob
           optimizedFiles[i] = myFile;
@@ -81,5 +102,34 @@ function calculateSize(img, maxWidth, maxHeight) {
   }
   return [width, height];
 }
+
+function calculateFrameSize(img, maxWidth, maxHeight) {
+  let width = img.width;
+  let height = img.height;
+
+  if (width <= maxWidth && height <= maxHeight) return [width, height];
+
+  let aspectRatio = width / height;
+  // calculate the width and height, constraining the proportions
+  // calculating dimensions of compressed image by retaining aspect ratio.
+  const [width1, height1] = [maxWidth, Math.round(maxWidth / aspectRatio)];
+  const [width2, height2] = [Math.round(maxHeight * aspectRatio), maxHeight];
+  if (width1 <= maxWidth && height1 <= maxHeight) return [width1, height1];
+  else if (width2 <= maxWidth && height2 <= maxHeight) return [width2, height2];
+}
+
+const getVideoDimensions = (videoFile) => {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(videoFile);
+    const videoTag = document.createElement('video');
+    videoTag.src = url;
+    videoTag.addEventListener('loadedmetadata', function () {
+      resolve({ width: this.videoWidth, height: this.videoHeight });
+    });
+    videoTag.addEventListener('error', function () {
+      reject('failed to load video');
+    });
+  });
+};
 
 export default optimizeFile;
