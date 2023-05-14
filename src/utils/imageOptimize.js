@@ -116,6 +116,7 @@ function calculateFrameSize(img, maxWidth, maxHeight) {
   const [width2, height2] = [Math.round(maxHeight * aspectRatio), maxHeight];
   if (width1 <= maxWidth && height1 <= maxHeight) return [width1, height1];
   else if (width2 <= maxWidth && height2 <= maxHeight) return [width2, height2];
+  else return [400, 400];
 }
 
 const getVideoDimensions = (videoFile) => {
