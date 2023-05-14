@@ -42,17 +42,16 @@ const uploadFile = async (
     function uploadProgress(e) {
       let bytesSent = e.loaded - prevSentBytes;
 
-      const byteInfo = byteSize(bytesSent);
-      progressInfo.rateUnit = `${byteInfo.unit}/s`;
-
       progressInfo.loaded = e.loaded;
       progressInfo.total = e.total;
       progressInfo.remainingBytes = e.total - e.loaded;
       progressInfo.fileSent = Math.round((e.loaded / e.total) * 100);
       const time = (Date.now() - timeDiff) / 1000;
 
-      if (time !== 0) {
-        progressInfo.rate = Math.round(byteInfo.value) / time;
+      if (time > 0) {
+        const byteInfo = byteSize(bytesSent / time);
+        progressInfo.rateUnit = `${byteInfo.unit}/s`;
+        progressInfo.rate = byteInfo.value;
         if (typeof progressCb === 'function') progressCb(progressInfo);
       }
       prevSentBytes = e.loaded;
