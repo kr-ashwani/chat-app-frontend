@@ -51,7 +51,7 @@ const uploadFile = async (
       if (time > 0) {
         const byteInfo = byteSize(bytesSent / time);
         progressInfo.rateUnit = `${byteInfo.unit}/s`;
-        progressInfo.rate = byteInfo.value;
+        progressInfo.rate = Math.round(byteInfo.value);
         if (typeof progressCb === 'function') progressCb(progressInfo);
       }
       prevSentBytes = e.loaded;
