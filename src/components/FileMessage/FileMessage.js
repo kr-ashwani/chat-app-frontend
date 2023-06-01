@@ -22,14 +22,12 @@ const FileMessage = ({ message }) => {
       getBlobUrl({ url: message.fileInfo.url, setBlobUrl });
   }, [message.fileInfo.url, message.fileInfo.type]);
 
-  function getFileSize(byte,options={}){
-    const byteInfo=byteSize(byte,options);
-     return `${byteInfo.value} ${byteInfo.unit}`
+  function getFileSize(byte, options = {}) {
+    const byteInfo = byteSize(byte, options);
+    return `${byteInfo.value} ${byteInfo.unit}`;
   }
 
-
-  if (inputType === 'photos/videos'
-   && fileType === 'image') {
+  if (inputType === 'photos/videos' && fileType === 'image') {
     return (
       <div className="msgFile photoCover">
         <div
@@ -102,16 +100,15 @@ const FileMessage = ({ message }) => {
               <div className="fileLoadingStats">
                 <p>
                   <span>
-                    {'100mb' &&
-                      getFileSize(message.fileProgressInfo.loaded)}
+                    {'100mb' && getFileSize(message.fileProgressInfo.loaded)}
                   </span>
                   /
                   <span>
-                    {'100mb' &&
-                      getFileSize(message.fileProgressInfo.total)}
+                    {'100mb' && getFileSize(message.fileProgressInfo.total)}
                   </span>
                 </p>
                 <p>
+                  {console.log(message.fileProgressInfo.rate)}
                   {'100' && message.fileProgressInfo.rate}
                   {'mb/s' && message.fileProgressInfo.rateUnit}
                 </p>
