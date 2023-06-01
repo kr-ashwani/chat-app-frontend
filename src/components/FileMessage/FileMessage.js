@@ -108,7 +108,6 @@ const FileMessage = ({ message }) => {
                   </span>
                 </p>
                 <p>
-                  {console.log(message.fileProgressInfo.rate)}
                   {'100' && message.fileProgressInfo.rate}
                   {'mb/s' && message.fileProgressInfo.rateUnit}
                 </p>
