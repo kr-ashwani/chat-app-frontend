@@ -64,8 +64,8 @@ const Login = () => {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setLoading(true);
     if (password.trim().length < 6) return;
+    setLoading(true);
     try {
       const response = await fetch(
         `${process.env.REACT_APP_SERVER_ENDPOINT}/login`,
