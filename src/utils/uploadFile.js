@@ -64,6 +64,7 @@ const uploadFile = async (
   }
 };
 
+/*
 const getVideoDimensions = (videoFile) => {
   return new Promise((resolve, reject) => {
     const url = URL.createObjectURL(videoFile);
@@ -77,5 +78,6 @@ const getVideoDimensions = (videoFile) => {
     });
   });
 };
+*/
 
 export default uploadFile;

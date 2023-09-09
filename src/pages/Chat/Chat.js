@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import ChatRooms from '../../components/ChatRooms/ChatRooms';
 import DisplayChat from '../../components/DisplayChat/DisplayChat';
-import { useAuth } from '../../context/AuthContext';
 import { ReplyMessageProvider } from '../../context/ReplyMessageContext';
 import { useSocket } from '../../context/SocketContext';
 
